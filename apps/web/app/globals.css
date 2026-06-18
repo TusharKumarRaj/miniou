@@ -1,0 +1,214 @@
+@import "tailwindcss";
+
+@theme {
+    --color-miniou-red: #ff1f1f;
+    --color-miniou-red-bright: #ff0033;
+    --color-miniou-red-dim: #cc1212;
+    --color-miniou-bg: #0a0b14;
+    --color-miniou-panel: #0d0f1a;
+    --font-display: var(--font-bebas), ui-sans-serif, system-ui, sans-serif;
+}
+
+body {
+    margin: 0;
+    background: var(--color-miniou-bg);
+    color: #fafafa;
+    font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+    background: color-mix(in oklab, var(--color-miniou-red) 35%, transparent);
+}
+
+.miniou-screen-bg,
+.miniou-mascot-bg {
+    background-size: cover;
+    background-position: center top;
+    background-repeat: no-repeat;
+}
+
+.miniou-mascot-bg {
+    background-image: url("/miniou_mascot.svg");
+}
+
+.miniou-cta-border {
+    background: linear-gradient(135deg, #ff2a2a 0%, #9333ea 55%, #ff2a2a 100%);
+    padding: 1px;
+}
+
+.miniou-panel-glow {
+    background: linear-gradient(
+        135deg,
+        rgba(255, 42, 42, 0.55) 0%,
+        rgba(147, 51, 234, 0.4) 55%,
+        rgba(255, 42, 42, 0.55) 100%
+    );
+    padding: 1px;
+    box-shadow: 0 0 32px rgba(255, 31, 31, 0.12);
+}
+
+.miniou-panel-inner,
+.miniou-panel {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    border-radius: 0.75rem;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(8, 8, 14, 0.18);
+    backdrop-filter: blur(28px) saturate(1.2);
+    -webkit-backdrop-filter: blur(28px) saturate(1.2);
+    box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.22),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1),
+        0 0 0 1px rgba(255, 31, 31, 0.06);
+}
+
+.miniou-panel::before,
+.miniou-panel-inner::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(
+        165deg,
+        rgba(4, 4, 10, 0.62) 0%,
+        rgba(8, 6, 12, 0.48) 45%,
+        rgba(4, 4, 10, 0.55) 100%
+    );
+    pointer-events: none;
+    z-index: 0;
+}
+
+.miniou-panel > *,
+.miniou-panel-inner > * {
+    position: relative;
+    z-index: 1;
+}
+
+.miniou-panel-inner {
+    background: rgba(8, 8, 14, 0.22);
+    backdrop-filter: blur(28px) saturate(1.2);
+    -webkit-backdrop-filter: blur(28px) saturate(1.2);
+}
+
+.miniou-input {
+    width: 100%;
+    border-radius: 0.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    background: rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    padding: 0.625rem 1rem;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    color: #fafafa;
+    outline: none;
+    transition:
+        border-color 0.15s,
+        box-shadow 0.15s;
+}
+
+.miniou-input::placeholder {
+    color: color-mix(in oklab, white 35%, transparent);
+}
+
+.miniou-input:focus {
+    border-color: color-mix(in oklab, var(--color-miniou-red) 50%, transparent);
+    box-shadow: 0 0 0 1px color-mix(in oklab, var(--color-miniou-red) 25%, transparent);
+}
+
+.miniou-btn-secondary {
+    border-radius: 0.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    padding: 0.5rem 1.25rem;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    color: color-mix(in oklab, white 85%, transparent);
+    transition:
+        border-color 0.15s,
+        background-color 0.15s,
+        color 0.15s;
+}
+
+.miniou-btn-secondary:hover {
+    border-color: color-mix(in oklab, white 28%, transparent);
+    background: color-mix(in oklab, white 5%, transparent);
+    color: #fff;
+}
+
+.miniou-link {
+    color: var(--color-miniou-red);
+    text-underline-offset: 4px;
+    transition: color 0.15s;
+}
+
+.miniou-link:hover {
+    color: #fff;
+}
+
+.miniou-stat-value {
+    font-family: var(--font-display);
+    letter-spacing: 0.02em;
+}
+
+.miniou-chat-bubble-user {
+    margin-left: auto;
+    max-width: 85%;
+    border-radius: 0.75rem;
+    background: linear-gradient(135deg, #ff2a2a 0%, #9333ea 100%);
+    padding: 0.625rem 1rem;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    color: #fff;
+}
+
+.miniou-chat-bubble-assistant {
+    max-width: 85%;
+    border-radius: 0.75rem;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(8, 8, 12, 0.4);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    padding: 0.625rem 1rem;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    color: color-mix(in oklab, white 90%, transparent);
+}
+
+.miniou-nav-item-active {
+    background: rgba(255, 31, 31, 0.18);
+    color: #fff;
+    box-shadow: inset 0 0 0 1px rgba(255, 31, 31, 0.35);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+.miniou-event-pill {
+    background: color-mix(in oklab, var(--color-miniou-red) 22%, transparent);
+    color: #fff;
+}
+
+.miniou-event-pill:hover {
+    background: color-mix(in oklab, var(--color-miniou-red) 35%, transparent);
+}
+
+.miniou-event-pill-active {
+    background: linear-gradient(135deg, #ff2a2a 0%, #9333ea 100%);
+    color: #fff;
+}
+
+.miniou-today-badge {
+    background: var(--color-miniou-red);
+    color: #fff;
+    font-weight: 600;
+}
+
+.miniou-glass-subtle {
+    background: rgba(8, 8, 12, 0.35);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+}

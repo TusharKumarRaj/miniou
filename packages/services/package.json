@@ -1,0 +1,26 @@
+{
+  "name": "@repo/services",
+  "version": "1.0.0",
+  "private": true,
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
+    "@types/bcryptjs": "^3.0.0",
+    "@types/jsonwebtoken": "^9.0.10",
+    "dotenv-cli": "^11.0.0",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "@ai-sdk/openai": "^3.0.71",
+    "@corsair-dev/mcp": "^0.1.22",
+    "@repo/corsair": "workspace:*",
+    "@repo/database": "workspace:*",
+    "@repo/logger": "workspace:*",
+    "ai": "^6.0.205",
+    "bcryptjs": "^3.0.3",
+    "corsair": "^0.1.0",
+    "google-auth-library": "^10.5.0",
+    "jsonwebtoken": "^9.0.3",
+    "zod": "^4.3.5"
+  }
+}

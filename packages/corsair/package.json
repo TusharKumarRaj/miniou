@@ -1,0 +1,29 @@
+{
+  "name": "@repo/corsair",
+  "version": "1.0.0",
+  "private": true,
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "setup": "dotenv -e ../../.env -- corsair setup",
+    "setup:google": "dotenv -e ../../.env -- tsx scripts/setup-google-credentials.ts"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
+    "dotenv-cli": "^11.0.0",
+    "ngrok": "5.0.0-beta.2",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "@corsair-dev/cli": "^0.1.0",
+    "@corsair-dev/gmail": "^0.1.0",
+    "@corsair-dev/googlecalendar": "^0.1.0",
+    "@repo/database": "workspace:*",
+    "corsair": "^0.1.0",
+    "dotenv": "^17.2.3",
+    "zod": "^4.3.5"
+  }
+}
