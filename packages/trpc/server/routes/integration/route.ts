@@ -4,6 +4,8 @@ import {
     getIntegrationStatusOutputModel,
     getConnectUrlInputModel,
     getConnectUrlOutputModel,
+    getSyncRevisionInputModel,
+    getSyncRevisionOutputModel,
 } from "./model";
 
 import { integrationService } from "../../services";
@@ -40,5 +42,19 @@ export const integrationRouter = router({
         .output(getConnectUrlOutputModel)
         .mutation(async ({ ctx, input }) => {
             return integrationService.getConnectUrl(ctx.user.id, input);
+        }),
+
+    getSyncRevision: authenticatedProcedure
+        .meta({
+            openapi: {
+                method: "GET",
+                path: getPath("/getSyncRevision"),
+                tags: TAGS,
+            },
+        })
+        .input(getSyncRevisionInputModel)
+        .output(getSyncRevisionOutputModel)
+        .query(async ({ ctx }) => {
+            return integrationService.getSyncRevision(ctx.user.id);
         }),
 });

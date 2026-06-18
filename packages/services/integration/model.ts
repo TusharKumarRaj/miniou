@@ -24,3 +24,10 @@ export type GetConnectUrlInputModel = z.infer<typeof getConnectUrlInputModel>;
 export const getConnectUrlOutputModel = dynamicObject({
     url: () => z.string(),
 });
+
+export const getSyncRevisionInputModel = z.undefined();
+
+export const getSyncRevisionOutputModel = dynamicObject({
+    gmail: () => z.number(),
+    googlecalendar: () => z.number(),
+});

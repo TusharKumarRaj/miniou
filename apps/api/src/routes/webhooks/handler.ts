@@ -4,7 +4,8 @@ import type { Request, Response } from "express";
 
 import { corsair } from "@repo/corsair";
 import { logger } from "@repo/logger";
-import WebhookService from "@repo/services/webhooks";
+import { bumpSyncSignal } from "@repo/services/sync-signal";
+import WebhookService, { extractGmailPushEmail } from "@repo/services/webhooks";
 
 const webhookService = new WebhookService();
 
@@ -67,6 +68,12 @@ export async function webhookHandler(req: Request, res: Response) {
 
         if (result.plugin) {
             logger.debug(`Webhook handled by ${result.plugin}.${result.action ?? "unknown"}`);
+        }
+
+        if (result.plugin === "gmail" || result.plugin === "googlecalendar") {
+            bumpSyncSignal(tenantId, result.plugin);
+        } else if (extractGmailPushEmail(req.body)) {
+            bumpSyncSignal(tenantId, "gmail");
         }
 
         sendWebhookResponse(res, result);

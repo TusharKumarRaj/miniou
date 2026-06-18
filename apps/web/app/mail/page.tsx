@@ -18,6 +18,7 @@ import {
 } from "~/components/ui/miniou";
 import { useRequireAuth } from "~/hooks/api/auth";
 import { useIntegrationStatus } from "~/hooks/api/integration";
+import { useWebhookSync } from "~/hooks/api/sync";
 import { useGmailMessage, useGmailMessages, useSendGmailEmail } from "~/hooks/api/gmail";
 
 const PAGE_SIZE = 25;
@@ -67,6 +68,7 @@ function MailPageContent() {
     const searchParams = useSearchParams();
     const { isLoading: userLoading } = useRequireAuth();
     const { data: status, isLoading: statusLoading } = useIntegrationStatus();
+    useWebhookSync("gmail");
     const sendEmail = useSendGmailEmail();
 
     const folderParam = searchParams.get("folder");

@@ -6,6 +6,8 @@ import { corsair } from "@repo/corsair";
 
 import { env } from "../env";
 
+import { getSyncSignals } from "../sync-signal";
+
 import {
     getConnectUrlInputModel,
     type GetConnectUrlInputModel,
@@ -61,5 +63,9 @@ export default class IntegrationService {
         url.searchParams.set("plugin", plugin);
 
         return { url: url.toString() };
+    }
+
+    public getSyncRevision(userId: string) {
+        return getSyncSignals(userId);
     }
 }

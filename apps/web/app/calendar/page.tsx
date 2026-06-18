@@ -22,6 +22,7 @@ import {
 } from "~/components/ui/miniou";
 import { useRequireAuth } from "~/hooks/api/auth";
 import { useIntegrationStatus } from "~/hooks/api/integration";
+import { useWebhookSync } from "~/hooks/api/sync";
 import {
     useCalendarEvent,
     useCalendarEvents,
@@ -91,6 +92,7 @@ export default function CalendarPage() {
     const router = useRouter();
     const { isLoading: userLoading } = useRequireAuth();
     const { data: status, isLoading: statusLoading } = useIntegrationStatus();
+    useWebhookSync("googlecalendar");
 
     const [viewDate, setViewDate] = useState(() => new Date());
     const [selectedDay, setSelectedDay] = useState(() => new Date());
