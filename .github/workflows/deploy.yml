@@ -36,7 +36,7 @@ jobs:
 
       - name: Build web
         env:
-          NEXT_PUBLIC_API_URL: https://miniou.tusharcodes.tech/trpc
+          NEXT_PUBLIC_API_URL: /trpc
         run: pnpm --filter web build
 
   deploy:

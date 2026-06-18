@@ -44,7 +44,7 @@ services:
       context: .
       dockerfile: deploy/Dockerfile.web
       args:
-        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-https://miniou.tusharcodes.tech/trpc}
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-/trpc}
     restart: unless-stopped
     container_name: miniou-web
     env_file: .env
