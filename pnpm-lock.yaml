@@ -27,6 +27,15 @@ importers:
 
   apps/api:
     dependencies:
+      '@corsair-dev/gmail':
+        specifier: ^0.1.0
+        version: 0.1.4(@types/node@22.15.3)(corsair@0.1.76)(zod@4.3.5)
+      '@corsair-dev/googlecalendar':
+        specifier: ^0.1.0
+        version: 0.1.4(@types/node@22.15.3)(corsair@0.1.76)(zod@4.3.5)
+      '@corsair-dev/mcp':
+        specifier: ^0.1.0
+        version: 0.1.22
       '@repo/corsair':
         specifier: workspace:*
         version: link:../../packages/corsair
