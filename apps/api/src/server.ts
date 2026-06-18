@@ -15,6 +15,8 @@ import cookieParser from "cookie-parser";
 import { requireAuth } from "./middleware/require-auth";
 import { connectHandler } from "./routes/integrations/connect";
 import { callbackHandler } from "./routes/integrations/callback";
+import { googleLoginCallbackHandler, googleLoginHandler } from "./routes/auth/google";
+import { verifyEmailHandler } from "./routes/auth/verify-email";
 import { webhookHandler } from "./routes/webhooks/handler";
 
 export const app = express();
@@ -64,6 +66,10 @@ app.get("/health", (req, res) => {
 
 app.get("/api/integrations/connect", requireAuth, connectHandler);
 app.get("/api/integrations/callback", callbackHandler);
+
+app.get("/api/auth/google", googleLoginHandler);
+app.get("/api/auth/google/callback", googleLoginCallbackHandler);
+app.get("/api/auth/verify-email", verifyEmailHandler);
 
 logger.debug(`openapi.json: ${env.BASE_URL}/openapi.json`);
 app.get("/openapi.json", (req, res) => {

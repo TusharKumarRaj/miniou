@@ -6,8 +6,9 @@
     ".": "./src/index.ts"
   },
   "scripts": {
-    "setup": "dotenv -e ../../.env -- corsair setup",
-    "setup:google": "dotenv -e ../../.env -- tsx scripts/setup-google-credentials.ts"
+    "reset": "dotenv -e ../../.env -- tsx scripts/reset-corsair.ts",
+    "setup:corsair": "dotenv -e ../../.env -- corsair setup",
+    "setup:google": "dotenv -e ../../.env -- corsair setup && dotenv -e ../../.env -- tsx scripts/setup-google-credentials.ts"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",

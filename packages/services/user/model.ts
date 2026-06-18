@@ -5,14 +5,17 @@ import { userIdSelectSchema, userPublicSelectSchema } from "@repo/database/schem
 import { dynamicObject } from "../shared/dynamic-schema";
 
 export const createUserWithEmailAndPassword = dynamicObject({
-    fullName: () => z.string().describe("Full name of the user"),
+    fullName: () => z.string().min(1).describe("Full name of the user"),
     email: () => z.email().describe("Email of the user"),
-    password: () => z.string().describe("Password of the user"),
+    password: () => z.string().min(8).describe("Password of the user"),
 });
 
 export type CreateUserWithEmailAndPasswordType = z.infer<typeof createUserWithEmailAndPassword>;
 
-export const createUserWithEmailAndPasswordOutput = userIdSelectSchema;
+export const createUserWithEmailAndPasswordOutput = dynamicObject({
+    id: () => z.string(),
+    emailVerificationRequired: () => z.boolean(),
+});
 
 export const generateUserTokenPayload = dynamicObject({
     id: () => z.string().describe("ID of the user"),

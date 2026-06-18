@@ -4,4 +4,6 @@ export * from "./models/chat-session";
 export * from "./models/chat-message";
 export * from "./models/oauth-state";
 export * from "./models/rate-limit-bucket";
+export * from "./models/auth-account";
+export * from "./models/email-verification";
 export * from "./schemas/zod";

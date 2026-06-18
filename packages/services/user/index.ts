@@ -4,6 +4,7 @@ import { usersTable } from "@repo/database/models/user";
 import bcrypt from "bcryptjs";
 import * as JWT from "jsonwebtoken";
 
+import { isEmailVerified, sendUserVerificationEmail } from "../auth/google";
 import { env } from "../env";
 import IntegrationService from "../integration";
 
@@ -20,14 +21,14 @@ export default class UserService {
     private integrationService = new IntegrationService();
 
     private async getUserByEmail(email: string) {
-        const result = await db.select().from(usersTable).where(eq(usersTable.email, email));
+        const result = await db.select().from(usersTable).where(eq(usersTable.email, email.toLowerCase()));
 
         if (!result || result.length === 0) return null;
 
         return result[0];
     }
 
-    private async generateUserToken(payload: GenerateUserTokenPayloadType) {
+    public async generateUserToken(payload: GenerateUserTokenPayloadType) {
         const { id } = await generateUserTokenPayload.parseAsync(payload);
 
         const token = JWT.sign({ id }, env.JWT_SECRET);
@@ -39,27 +40,28 @@ export default class UserService {
         const { fullName, email, password } =
             await createUserWithEmailAndPassword.parseAsync(payload);
 
-        const existingUser = await this.getUserByEmail(email);
+        const normalizedEmail = email.toLowerCase();
+        const existingUser = await this.getUserByEmail(normalizedEmail);
         if (existingUser) throw new Error("User with this email already exists");
 
         const passwordHash = await bcrypt.hash(password, 10);
 
         const result = await db
             .insert(usersTable)
-            .values({ fullName, email, passwordHash })
+            .values({ fullName, email: normalizedEmail, passwordHash })
             .returning({ id: usersTable.id });
 
         if (!result || result.length === 0 || !result[0]?.id) {
             throw new Error("Something went wrong while creating a new user");
         }
 
-        const { token } = await this.generateUserToken({ id: result[0].id });
-
-        await this.integrationService.ensureTenant(result[0].id);
+        const userId = result[0].id;
+        await this.integrationService.ensureTenant(userId);
+        await sendUserVerificationEmail(userId, normalizedEmail);
 
         return {
-            id: result[0].id,
-            token,
+            id: userId,
+            emailVerificationRequired: true,
         };
     }
 
@@ -72,11 +74,16 @@ export default class UserService {
         }
 
         if (!existingUser.passwordHash) {
-            throw new Error("Invalid authentication method");
+            throw new Error("This account uses Google sign-in. Continue with Google.");
         }
 
         const isValid = await bcrypt.compare(password, existingUser.passwordHash);
         if (!isValid) throw new Error("Invalid email address or password");
+
+        if (!isEmailVerified(existingUser)) {
+            await sendUserVerificationEmail(existingUser.id, existingUser.email);
+            throw new Error("Please verify your email before signing in. We sent you a new verification link.");
+        }
 
         const { token } = await this.generateUserToken({ id: existingUser.id });
 
@@ -104,7 +111,7 @@ export default class UserService {
             const result = JWT.verify(token, env.JWT_SECRET) as GenerateUserTokenPayloadType;
 
             return result;
-        } catch (err) {
+        } catch {
             throw new Error("Invalid token");
         }
     }
