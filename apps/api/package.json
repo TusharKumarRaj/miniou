@@ -33,6 +33,7 @@
     "cors": "^2.8.5",
     "express": "^5.2.1",
     "express-rate-limit": "^8.1.0",
+    "pg": "^8.16.3",
     "trpc-to-openapi": "^3.1.0",
     "zod": "^4.3.5"
   }

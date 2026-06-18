@@ -13,5 +13,5 @@ cd /app/packages/database
 pnpm exec drizzle-kit migrate
 
 echo "Starting HTTP server..."
-cd /app/apps/api
-exec node dist/index.js
+cd /app
+exec pnpm --filter @repo/api start

@@ -60,6 +60,9 @@ importers:
       express-rate-limit:
         specifier: ^8.1.0
         version: 8.5.2(express@5.2.1)
+      pg:
+        specifier: ^8.16.3
+        version: 8.16.3
       trpc-to-openapi:
         specifier: ^3.1.0
         version: 3.1.0(@trpc/server@11.8.1(typescript@5.9.3))(zod-openapi@5.4.5(zod@4.3.5))(zod@4.3.5)
