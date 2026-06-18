@@ -31,13 +31,15 @@ export const authRouter = router({
         .mutation(async ({ input, ctx }) => {
             const { fullName, email, password } = input;
 
-            const result = await userService.createUserWithEmailAndPassword({
+            const { id, token } = await userService.createUserWithEmailAndPassword({
                 fullName,
                 email,
                 password,
             });
 
-            return result;
+            ctx.setCookie("token", token, getAuthCookieOptions());
+
+            return { id };
         }),
     signInUserWithEmailAndPassword: publicProcedure
         .meta({

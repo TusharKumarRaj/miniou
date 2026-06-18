@@ -12,10 +12,7 @@ export const createUserWithEmailAndPassword = dynamicObject({
 
 export type CreateUserWithEmailAndPasswordType = z.infer<typeof createUserWithEmailAndPassword>;
 
-export const createUserWithEmailAndPasswordOutput = dynamicObject({
-    id: () => z.string(),
-    emailVerificationRequired: () => z.boolean(),
-});
+export const createUserWithEmailAndPasswordOutput = userIdSelectSchema;
 
 export const generateUserTokenPayload = dynamicObject({
     id: () => z.string().describe("ID of the user"),

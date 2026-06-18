@@ -20,7 +20,6 @@ export default function SignUpPage() {
     const [fullName, setFullName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [verificationSent, setVerificationSent] = useState(false);
 
     useEffect(() => {
         if (!userLoading && user) {
@@ -31,27 +30,7 @@ export default function SignUpPage() {
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
         await signUp.mutateAsync({ fullName, email, password });
-        setVerificationSent(true);
-    }
-
-    if (verificationSent) {
-        return (
-            <AppShell variant="auth" background="signup">
-                <MiniouPanel glow className="w-full max-w-md p-8 text-center">
-                    <p className="text-[10px] font-semibold uppercase tracking-[0.35em] text-miniou-red">
-                        Check your inbox
-                    </p>
-                    <h1 className="mt-2 text-2xl font-semibold">Verify your email</h1>
-                    <p className="mt-4 text-sm text-white/60">
-                        We sent a verification link to <span className="text-white">{email}</span>.
-                        Click it to activate your account, then sign in.
-                    </p>
-                    <MiniouLink href="/login" className="mt-6 inline-block no-underline hover:underline">
-                        Back to sign in
-                    </MiniouLink>
-                </MiniouPanel>
-            </AppShell>
-        );
+        router.push("/settings/integrations");
     }
 
     return (

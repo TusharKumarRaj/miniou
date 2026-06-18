@@ -4,7 +4,6 @@ import { usersTable } from "@repo/database/models/user";
 import bcrypt from "bcryptjs";
 import * as JWT from "jsonwebtoken";
 
-import { isEmailVerified, sendUserVerificationEmail } from "../auth/google";
 import { env } from "../env";
 import IntegrationService from "../integration";
 
@@ -56,12 +55,13 @@ export default class UserService {
         }
 
         const userId = result[0].id;
+        const { token } = await this.generateUserToken({ id: userId });
+
         await this.integrationService.ensureTenant(userId);
-        await sendUserVerificationEmail(userId, normalizedEmail);
 
         return {
             id: userId,
-            emailVerificationRequired: true,
+            token,
         };
     }
 
@@ -79,11 +79,6 @@ export default class UserService {
 
         const isValid = await bcrypt.compare(password, existingUser.passwordHash);
         if (!isValid) throw new Error("Invalid email address or password");
-
-        if (!isEmailVerified(existingUser)) {
-            await sendUserVerificationEmail(existingUser.id, existingUser.email);
-            throw new Error("Please verify your email before signing in. We sent you a new verification link.");
-        }
 
         const { token } = await this.generateUserToken({ id: existingUser.id });
 

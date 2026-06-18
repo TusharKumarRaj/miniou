@@ -6,8 +6,6 @@ const envSchema = z.object({
     WEB_URL: z.string().default("http://localhost:3000"),
     GOOGLE_CLIENT_ID: z.string().optional(),
     GOOGLE_CLIENT_SECRET: z.string().optional(),
-    RESEND_API_KEY: z.string().optional(),
-    EMAIL_FROM: z.string().optional(),
     OPENAI_API_KEY: z.string().optional(),
     GMAIL_PUBSUB_TOPIC: z.string().optional(),
     WEBHOOK_TENANT_SECRET: z.string().optional(),

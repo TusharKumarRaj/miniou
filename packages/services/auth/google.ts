@@ -1,18 +1,13 @@
-import { randomBytes } from "node:crypto";
-
-import { and, eq, gt } from "@repo/database";
+import { and, eq } from "@repo/database";
 import { db } from "@repo/database";
 import { authAccountsTable } from "@repo/database/models/auth-account";
-import { emailVerificationTokensTable } from "@repo/database/models/email-verification";
 import { usersTable } from "@repo/database/models/user";
 import { OAuth2Client } from "google-auth-library";
 
 import { env } from "../env";
-import { sendVerificationEmail } from "../email";
 import IntegrationService from "../integration";
 
 const GOOGLE_PROVIDER = "google";
-const VERIFICATION_TTL_MS = 24 * 60 * 60 * 1000;
 
 function getGoogleOAuthClient(redirectUri: string) {
     const clientId = env.GOOGLE_CLIENT_ID?.trim();
@@ -118,17 +113,12 @@ export class GoogleAuthService {
 
             if (existingByEmail[0]) {
                 userId = existingByEmail[0].id;
-                await db
-                    .update(usersTable)
-                    .set({ emailVerifiedAt: new Date(), updatedAt: new Date() })
-                    .where(eq(usersTable.id, userId));
             } else {
                 const created = await db
                     .insert(usersTable)
                     .values({
                         fullName: profile.name,
                         email: profile.email,
-                        emailVerifiedAt: new Date(),
                     })
                     .returning({ id: usersTable.id });
 
@@ -145,54 +135,4 @@ export class GoogleAuthService {
         await this.integrationService.ensureTenant(userId);
         return userId;
     }
-}
-
-export async function createEmailVerificationToken(userId: string) {
-    const token = randomBytes(32).toString("hex");
-    const expiresAt = new Date(Date.now() + VERIFICATION_TTL_MS);
-
-    await db.delete(emailVerificationTokensTable).where(eq(emailVerificationTokensTable.userId, userId));
-    await db.insert(emailVerificationTokensTable).values({ token, userId, expiresAt });
-
-    return token;
-}
-
-export async function sendUserVerificationEmail(userId: string, email: string) {
-    const token = await createEmailVerificationToken(userId);
-    const verifyUrl = `${env.APP_URL.replace(/\/$/, "")}/api/auth/verify-email?token=${encodeURIComponent(token)}`;
-    await sendVerificationEmail(email, verifyUrl);
-}
-
-export async function verifyEmailToken(token: string) {
-    const rows = await db
-        .select({
-            userId: emailVerificationTokensTable.userId,
-            expiresAt: emailVerificationTokensTable.expiresAt,
-        })
-        .from(emailVerificationTokensTable)
-        .where(
-            and(
-                eq(emailVerificationTokensTable.token, token),
-                gt(emailVerificationTokensTable.expiresAt, new Date()),
-            ),
-        )
-        .limit(1);
-
-    const row = rows[0];
-    if (!row) {
-        throw new Error("Verification link is invalid or expired");
-    }
-
-    await db
-        .update(usersTable)
-        .set({ emailVerifiedAt: new Date(), updatedAt: new Date() })
-        .where(eq(usersTable.id, row.userId));
-
-    await db.delete(emailVerificationTokensTable).where(eq(emailVerificationTokensTable.token, token));
-
-    return row.userId;
-}
-
-export function isEmailVerified(user: { emailVerifiedAt: Date | null }) {
-    return user.emailVerifiedAt !== null;
 }
