@@ -4,7 +4,7 @@ RUN corepack enable && corepack prepare pnpm@9.0.0 --activate
 WORKDIR /app
 
 FROM base AS builder
-RUN pnpm add -g turbo@^2.7.2
+RUN npm install -g turbo@^2.7.2
 COPY . .
 RUN turbo prune @repo/api --docker
 
