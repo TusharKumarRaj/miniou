@@ -4,10 +4,29 @@ import { rateLimitBucketsTable } from "@repo/database/models/rate-limit-bucket";
 
 import { env } from "../env";
 
+function formatRateLimitWindow(windowMs: number): string {
+    const hourMs = 60 * 60 * 1000;
+    const dayMs = 24 * hourMs;
+
+    if (windowMs >= dayMs && windowMs % dayMs === 0) {
+        const days = windowMs / dayMs;
+        return days === 1 ? "per day" : `per ${days} days`;
+    }
+
+    if (windowMs >= hourMs && windowMs % hourMs === 0) {
+        const hours = windowMs / hourMs;
+        return hours === 1 ? "per hour" : `per ${hours} hours`;
+    }
+
+    const minutes = Math.max(1, Math.round(windowMs / (60 * 1000)));
+    return minutes === 1 ? "per minute" : `per ${minutes} minutes`;
+}
+
 export class MeetingRateLimitError extends Error {
     constructor() {
+        const windowLabel = formatRateLimitWindow(env.MEETING_RATE_LIMIT_WINDOW_MS);
         super(
-            `Rate limit exceeded. Try again in a few minutes (max ${env.MEETING_RATE_LIMIT_MAX} messages per hour).`,
+            `Rate limit exceeded. You can send up to ${env.MEETING_RATE_LIMIT_MAX} messages ${windowLabel}. Try again later.`,
         );
         this.name = "MeetingRateLimitError";
     }

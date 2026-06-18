@@ -9,7 +9,7 @@ const envSchema = z.object({
     OPENAI_API_KEY: z.string().optional(),
     GMAIL_PUBSUB_TOPIC: z.string().optional(),
     WEBHOOK_TENANT_SECRET: z.string().optional(),
-    MEETING_RATE_LIMIT_MAX: z.coerce.number().int().min(1).default(20),
+    MEETING_RATE_LIMIT_MAX: z.coerce.number().int().min(1).default(5),
     MEETING_RATE_LIMIT_WINDOW_MS: z.coerce
         .number()
         .int()
