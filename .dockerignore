@@ -1,0 +1,13 @@
+**/node_modules
+**/.next
+**/dist
+.git
+.github
+.env
+.env.*
+!.env.example
+**/*.md
+**/terminals
+.cursor
+mcps
+frontend

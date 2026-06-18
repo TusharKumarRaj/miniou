@@ -1,0 +1,66 @@
+services:
+  postgresdb:
+    image: postgres:15-alpine
+    restart: unless-stopped
+    container_name: miniou-postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+      POSTGRES_DB: ${POSTGRES_DB:-miniou}
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    networks:
+      - miniou
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-miniou}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build:
+      context: .
+      dockerfile: deploy/Dockerfile.api
+    restart: unless-stopped
+    container_name: miniou-api
+    env_file: .env
+    environment:
+      NODE_ENV: prod
+      PORT: 8000
+      DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD}@postgresdb:5432/${POSTGRES_DB:-miniou}
+      BASE_URL: ${BASE_URL:-https://miniou.tusharcodes.tech}
+      APP_URL: ${APP_URL:-https://miniou.tusharcodes.tech}
+      WEB_URL: ${WEB_URL:-https://miniou.tusharcodes.tech}
+    ports:
+      - "127.0.0.1:8001:8000"
+    depends_on:
+      postgresdb:
+        condition: service_healthy
+    networks:
+      - miniou
+
+  web:
+    build:
+      context: .
+      dockerfile: deploy/Dockerfile.web
+      args:
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-https://miniou.tusharcodes.tech/trpc}
+    restart: unless-stopped
+    container_name: miniou-web
+    env_file: .env
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+    ports:
+      - "127.0.0.1:3001:3000"
+    depends_on:
+      - api
+    networks:
+      - miniou
+
+networks:
+  miniou:
+    driver: bridge
+
+volumes:
+  pg_data:

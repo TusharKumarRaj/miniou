@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 
 import {
     isGmailMailboxLabel,
@@ -49,6 +49,20 @@ function messageListTitle(label: GmailMailboxLabel, message: { from: string; to:
 }
 
 export default function MailPage() {
+    return (
+        <Suspense
+            fallback={
+                <WorkspaceShell background="gmail" activeWorkspace="mail">
+                    <MiniouLoading message="Loading mailbox..." />
+                </WorkspaceShell>
+            }
+        >
+            <MailPageContent />
+        </Suspense>
+    );
+}
+
+function MailPageContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const { isLoading: userLoading } = useRequireAuth();
