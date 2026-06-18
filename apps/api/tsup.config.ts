@@ -4,8 +4,9 @@ export default defineConfig({
   entry: ["./src/index.ts"],
   splitting: false,
   bundle: true,
-  // Bundle app code; keep workspace packages and native/optional deps external.
-  external: [/^@repo\//, "pg", "pg-native"],
+  noExternal: [/^@repo\//],
+  // Bundle workspace packages; keep native/pg and Corsair runtime deps external.
+  external: ["pg", "pg-native", "corsair", /^@corsair-dev\//],
   outDir: "./dist",
   clean: true,
   env: { IS_SERVER_BUILD: "true" },
