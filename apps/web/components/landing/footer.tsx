@@ -58,6 +58,14 @@ export function LandingFooter() {
                     Connect Google once. Send mail and book meetings from chat or the
                     built-in workspace.
                 </p>
+                <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-white/35">
+                    <Link href="/privacy" className="transition hover:text-white/70">
+                        Privacy
+                    </Link>
+                    <Link href="/terms" className="transition hover:text-white/70">
+                        Terms
+                    </Link>
+                </div>
                 <div className="flex gap-3">
                     {SOCIAL_LINKS.map((link) => (
                         <Link
