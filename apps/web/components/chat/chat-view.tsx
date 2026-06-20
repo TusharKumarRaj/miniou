@@ -142,7 +142,7 @@ export function ChatView({ sessionId }: { sessionId?: string }) {
                     ) : (
                         <>
                             <div className="min-h-0 flex-1 overflow-y-auto px-4 py-4">
-                                {history?.messages.length === 0 && (
+                                {history?.messages.length === 0 && !sendMessage.isPending && (
                                     <div className="flex min-h-[12rem] flex-col items-center justify-center text-center">
                                         <p className="text-sm text-muted">
                                             Try: &quot;Email John about the project update&quot;
@@ -172,6 +172,13 @@ export function ChatView({ sessionId }: { sessionId?: string }) {
                                             </div>
                                         </div>
                                     ))}
+                                    {sendMessage.isPending && sendMessage.variables?.message && (
+                                        <div className="flex justify-end">
+                                            <div className="miniou-chat-bubble-user">
+                                                {sendMessage.variables.message}
+                                            </div>
+                                        </div>
+                                    )}
                                     {sendMessage.isPending && (
                                         <div className="flex justify-start">
                                             <p className="miniou-chat-bubble-assistant text-muted">
