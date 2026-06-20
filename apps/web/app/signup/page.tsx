@@ -23,7 +23,7 @@ export default function SignUpPage() {
 
     useEffect(() => {
         if (!userLoading && user) {
-            router.replace("/mail");
+            router.replace("/chat");
         }
     }, [user, userLoading, router]);
 

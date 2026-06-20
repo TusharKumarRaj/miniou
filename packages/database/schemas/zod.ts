@@ -8,6 +8,8 @@ export const chatSessionSelectSchema = createSelectSchema(chatSessionsTable);
 
 export const chatSessionPublicSchema = chatSessionSelectSchema.omit({
     userId: true,
+    pendingEmail: true,
+    pendingCalendar: true,
 });
 
 export const chatMessageSelectSchema = createSelectSchema(chatMessagesTable);

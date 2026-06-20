@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
 
+import { ThemeToggle } from "~/components/ui/theme-toggle";
 import { cn } from "~/lib/cn";
 
 export type GmailMailboxLabel =
@@ -98,6 +99,15 @@ export function isGmailMailboxLabel(value: string): value is GmailMailboxLabel {
     return GMAIL_MAILBOXES.some((m) => m.label === value);
 }
 
+const MAILBOX_COACHMARK_IDS: Record<GmailMailboxLabel, string> = {
+    INBOX: "sidebar-inbox",
+    STARRED: "sidebar-starred",
+    DRAFT: "sidebar-draft",
+    SENT: "sidebar-sent",
+    SPAM: "sidebar-spam",
+    TRASH: "sidebar-trash",
+};
+
 type WorkspaceSidebarProps = {
     activeWorkspace: WorkspaceSection;
     activeMailboxLabel?: GmailMailboxLabel;
@@ -113,7 +123,7 @@ export function WorkspaceSidebar({
     const onMailPage = pathname.startsWith("/mail");
 
     return (
-        <aside className="miniou-panel hidden w-56 shrink-0 flex-col p-3 lg:flex">
+        <aside className="miniou-panel hidden w-56 shrink-0 flex-col self-stretch p-3 lg:flex">
             <p className="px-3 py-2 text-[11px] font-semibold uppercase tracking-wider text-muted">
                 Mailboxes
             </p>
@@ -126,6 +136,7 @@ export function WorkspaceSidebar({
                             <button
                                 key={mailbox.label}
                                 type="button"
+                                data-coachmark={MAILBOX_COACHMARK_IDS[mailbox.label]}
                                 onClick={() => onSelectMailbox(mailbox.label)}
                                 className={navItemClass(active)}
                             >
@@ -139,6 +150,7 @@ export function WorkspaceSidebar({
                         <Link
                             key={mailbox.label}
                             href={`/mail?folder=${mailbox.label}`}
+                            data-coachmark={MAILBOX_COACHMARK_IDS[mailbox.label]}
                             className={navItemClass(active)}
                         >
                             {mailbox.icon}
@@ -146,7 +158,11 @@ export function WorkspaceSidebar({
                         </Link>
                     );
                 })}
-                <Link href="/calendar" className={navItemClass(activeWorkspace === "calendar")}>
+                <Link
+                    href="/calendar"
+                    data-coachmark="sidebar-calendar"
+                    className={navItemClass(activeWorkspace === "calendar")}
+                >
                     <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.75">
                         <rect x="3" y="4" width="18" height="18" rx="2" />
                         <path d="M16 2v4M8 2v4M3 10h18" />
@@ -161,7 +177,11 @@ export function WorkspaceSidebar({
                 Workspace
             </p>
             <nav className="space-y-0.5">
-                <Link href="/chat" className={navItemClass(activeWorkspace === "chat")}>
+                <Link
+                    href="/chat"
+                    data-coachmark="sidebar-chat"
+                    className={navItemClass(activeWorkspace === "chat")}
+                >
                     <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.75">
                         <path d="M21 15a4 4 0 01-4 4H8l-5 3V7a4 4 0 014-4h10a4 4 0 014 4z" />
                     </svg>
@@ -169,6 +189,7 @@ export function WorkspaceSidebar({
                 </Link>
                 <Link
                     href="/settings/integrations"
+                    data-coachmark="sidebar-settings"
                     className={navItemClass(activeWorkspace === "settings")}
                 >
                     <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.75">
@@ -178,6 +199,14 @@ export function WorkspaceSidebar({
                     Settings
                 </Link>
             </nav>
+
+            <div className="mt-auto border-t border-border pt-3">
+                <ThemeToggle
+                    coachmarkId="sidebar-theme"
+                    className="w-full justify-center border-0 px-3 py-2 hover:bg-surface-hover"
+                    showLabel
+                />
+            </div>
         </aside>
     );
 }

@@ -40,7 +40,7 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="en" style={{ colorScheme: "dark" }}>
+        <html lang="en" suppressHydrationWarning>
             <body
                 className={`${geistSans.variable} ${instrumentSerif.variable} ${ibmPlexMono.variable} ${syne.variable} paper-bg antialiased`}
             >

@@ -39,7 +39,7 @@ export function LandingNav() {
 
                 <div className="flex shrink-0 items-center gap-3 sm:gap-4">
                     {user ? (
-                        <MiniouButtonLink href="/mail" size="sm">
+                        <MiniouButtonLink href="/chat" size="sm">
                             Open app
                         </MiniouButtonLink>
                     ) : (

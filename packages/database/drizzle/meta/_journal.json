@@ -24,10 +24,24 @@
       "breakpoints": true
     },
     {
-      "idx": 3,
+      "idx": 4,
       "version": "7",
-      "when": 1781800000000,
-      "tag": "0003_auth_google_email_verify",
+      "when": 1781900000000,
+      "tag": "0004_chat_message_attachments",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1782000000000,
+      "tag": "0005_chat_pending_email",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1782100000000,
+      "tag": "0006_chat_pending_calendar",
       "breakpoints": true
     }
   ]

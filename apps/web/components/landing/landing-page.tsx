@@ -3,10 +3,10 @@
 import Link from "next/link";
 
 import { AppShell } from "~/components/layout/app-shell";
-import { ImageSlot } from "~/components/landing/image-slot";
-import { LANDING_ASSETS } from "~/components/landing/landing-assets";
+import { HeroFigure } from "~/components/landing/hero-figure";
 import { useInView, useStagedReveal } from "~/components/landing/use-staged-reveal";
 import { MiniouButtonLink } from "~/components/ui/miniou";
+import { ThemeToggle } from "~/components/ui/theme-toggle";
 import { useLoggedInUser } from "~/hooks/api/auth";
 import { cn } from "~/lib/cn";
 
@@ -34,7 +34,7 @@ function LandingNav({ visible }: { visible: boolean }) {
     return (
         <header
             className={cn(
-                "fixed inset-x-0 top-0 z-50 border-b border-white/8 bg-[#030505]/65 backdrop-blur-xl backdrop-saturate-150 transition-opacity duration-700 supports-[backdrop-filter]:bg-[#030505]/50",
+                "landing-nav-blur fixed inset-x-0 top-0 z-50 backdrop-saturate-150 transition-opacity duration-700",
                 visible ? "opacity-100" : "pointer-events-none opacity-0",
             )}
         >
@@ -65,8 +65,9 @@ function LandingNav({ visible }: { visible: boolean }) {
                 </nav>
 
                 <div className="flex shrink-0 items-center gap-2">
+                    <ThemeToggle />
                     {user ? (
-                        <MiniouButtonLink href="/mail" size="sm">
+                        <MiniouButtonLink href="/chat" size="sm">
                             Open app
                         </MiniouButtonLink>
                     ) : (
@@ -100,22 +101,13 @@ function HeroSection() {
             <LandingNav visible={stage >= 3} />
 
             {/* Stage 1 — figure */}
-            <div className="relative z-0 mx-auto flex w-full flex-1 items-start justify-center px-2 pt-8 md:px-4 md:pt-10">
+            <div className="relative z-0 mx-auto flex w-full flex-1 items-start justify-center px-2 pt-0 md:px-4">
                 <Reveal
                     show={stage >= 1}
                     scale
-                    className="relative aspect-[1672/941] w-full max-w-[min(98vw,960px)] -translate-y-2 md:-translate-y-4"
+                    className="relative aspect-[1672/941] w-full max-w-[min(100vw,1120px)] -mt-1 bg-background md:-mt-2"
                 >
-                    <ImageSlot
-                        src={LANDING_ASSETS.heroFigure}
-                        alt="Hero figure"
-                        label="hero-figure.svg"
-                        fill
-                        priority
-                        unoptimized
-                        className="h-full w-full"
-                        imageClassName="object-center"
-                    />
+                    <HeroFigure />
                 </Reveal>
             </div>
 
@@ -160,7 +152,7 @@ function ManifestoSection() {
         <section
             id="manifesto"
             ref={ref as React.RefObject<HTMLElement>}
-            className="flex min-h-[100dvh] flex-col justify-center border-t border-white/8 px-6 py-24 md:px-10"
+            className="flex min-h-[100dvh] flex-col justify-center border-t border-border px-6 py-24 md:px-10"
         >
             <Reveal show={stage >= 1}>
                 <h2 className="voyance-manifesto mx-auto max-w-5xl text-center uppercase">
@@ -221,15 +213,9 @@ function TaskSolutionSection() {
         <section
             id="features"
             ref={ref as React.RefObject<HTMLElement>}
-            className="relative min-h-[100dvh] overflow-hidden border-t border-white/8 bg-background"
+            className="relative min-h-[100dvh] overflow-hidden border-t border-border bg-background"
         >
-            <div
-                className="absolute inset-0 opacity-40"
-                style={{
-                    background:
-                        "radial-gradient(ellipse 80% 50% at 50% 0%, rgba(255,255,255,0.08) 0%, transparent 70%), radial-gradient(ellipse 60% 40% at 80% 100%, rgba(255,255,255,0.04) 0%, transparent 60%)",
-                }}
-            />
+            <div className="landing-hero-glow absolute inset-0 opacity-40" />
 
             <div className="relative z-10 flex min-h-[100dvh] flex-col justify-between px-6 py-16 md:px-10 md:py-20">
                 <Reveal show={stage >= 1} className="max-w-xs">
@@ -288,7 +274,7 @@ function VisionSection() {
         <section
             id="vision"
             ref={ref as React.RefObject<HTMLElement>}
-            className="relative min-h-[100dvh] overflow-hidden border-t border-white/8 bg-background"
+            className="relative min-h-[100dvh] overflow-hidden border-t border-border bg-background"
         >
             <div className="relative mx-auto flex min-h-[100dvh] max-w-7xl flex-col justify-center px-6 py-20 md:px-10">
                 <div className="grid gap-12 lg:grid-cols-2 lg:gap-8">
@@ -342,7 +328,7 @@ function VisionSection() {
 
 function CtaFooter() {
     return (
-        <footer className="border-t border-white/8 px-6 py-16 md:px-10">
+        <footer className="border-t border-border px-6 py-16 md:px-10">
             <div className="mx-auto flex max-w-6xl flex-col items-start justify-between gap-8 sm:flex-row sm:items-center">
                 <div>
                     <h2 className="font-display text-2xl font-bold tracking-tight">Ready to open miniou?</h2>

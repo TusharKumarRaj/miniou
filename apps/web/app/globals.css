@@ -1,24 +1,112 @@
 @import "tailwindcss";
 
-@theme {
-    --color-background: #030505;
-    --color-foreground: #ffffff;
-    --color-muted: #d7d7d7;
-    --color-muted-dim: #909090;
-    --color-border: rgba(255, 255, 255, 0.12);
-    --color-card: #ffffff;
-    --color-surface: rgba(255, 255, 255, 0.04);
-    --color-surface-hover: rgba(255, 255, 255, 0.08);
-    --color-primary: #ffffff;
-    --color-primary-foreground: #030505;
-    --color-accent: #ffffff;
-    --color-accent-soft: rgba(255, 255, 255, 0.06);
-    --color-sage: #d7d7d7;
-    --color-sage-soft: rgba(215, 215, 215, 0.08);
-    --color-muted-surface: #1a1a1a;
-    --color-ink: #ffffff;
-    --color-destructive: #f87171;
-    --color-voyance-gray: #d7d7d7;
+:root {
+    color-scheme: light;
+    --miniou-bg: #ffffff;
+    --miniou-fg: #030505;
+    --miniou-muted: #3d3d3d;
+    --miniou-muted-dim: #666666;
+    --miniou-border: rgba(3, 5, 5, 0.12);
+    --miniou-card: #ffffff;
+    --miniou-surface: rgba(3, 5, 5, 0.04);
+    --miniou-surface-hover: rgba(3, 5, 5, 0.08);
+    --miniou-primary: #030505;
+    --miniou-primary-fg: #ffffff;
+    --miniou-accent: #030505;
+    --miniou-accent-soft: rgba(3, 5, 5, 0.06);
+    --miniou-sage: #3d3d3d;
+    --miniou-sage-soft: rgba(61, 61, 61, 0.08);
+    --miniou-muted-surface: #f5f5f5;
+    --miniou-ink: #030505;
+    --miniou-destructive: #dc2626;
+    --miniou-voyance-gray: #3d3d3d;
+    --miniou-panel-bg: rgba(3, 5, 5, 0.03);
+    --miniou-panel-glow-bg: rgba(255, 255, 255, 0.85);
+    --miniou-panel-shadow: 0 24px 80px rgba(0, 0, 0, 0.08);
+    --miniou-input-bg: rgba(3, 5, 5, 0.04);
+    --miniou-input-focus-border: rgba(3, 5, 5, 0.28);
+    --miniou-input-focus-ring: rgba(3, 5, 5, 0.06);
+    --miniou-selection: rgba(3, 5, 5, 0.12);
+    --miniou-scrollbar: rgba(3, 5, 5, 0.2);
+    --miniou-nav-active-bg: rgba(3, 5, 5, 0.08);
+    --miniou-nav-active-color: #030505;
+    --miniou-link-hover: #030505;
+    --miniou-btn-secondary-border: rgba(3, 5, 5, 0.15);
+    --miniou-btn-secondary-hover-bg: rgba(3, 5, 5, 0.05);
+    --miniou-btn-secondary-hover-border: rgba(3, 5, 5, 0.25);
+    --miniou-watermark: rgba(3, 5, 5, 0.06);
+    --miniou-pill-outline-border: rgba(3, 5, 5, 0.2);
+    --miniou-pill-outline-hover-bg: rgba(3, 5, 5, 0.04);
+    --miniou-pill-outline-hover-border: rgba(3, 5, 5, 0.35);
+    --miniou-paper-noise: 0.03;
+    --miniou-chat-assistant-bg: rgba(255, 255, 255, 0.75);
+    --miniou-glass-bg: rgba(255, 255, 255, 0.65);
+    --miniou-hero-glow: rgba(3, 5, 5, 0.06);
+}
+
+.dark {
+    color-scheme: dark;
+    --miniou-bg: #030505;
+    --miniou-fg: #ffffff;
+    --miniou-muted: #d7d7d7;
+    --miniou-muted-dim: #909090;
+    --miniou-border: rgba(255, 255, 255, 0.12);
+    --miniou-card: #ffffff;
+    --miniou-surface: rgba(255, 255, 255, 0.04);
+    --miniou-surface-hover: rgba(255, 255, 255, 0.08);
+    --miniou-primary: #ffffff;
+    --miniou-primary-fg: #030505;
+    --miniou-accent: #ffffff;
+    --miniou-accent-soft: rgba(255, 255, 255, 0.06);
+    --miniou-sage: #d7d7d7;
+    --miniou-sage-soft: rgba(215, 215, 215, 0.08);
+    --miniou-muted-surface: #1a1a1a;
+    --miniou-ink: #ffffff;
+    --miniou-destructive: #f87171;
+    --miniou-voyance-gray: #d7d7d7;
+    --miniou-panel-bg: rgba(255, 255, 255, 0.03);
+    --miniou-panel-glow-bg: rgba(255, 255, 255, 0.04);
+    --miniou-panel-shadow: 0 24px 80px rgba(0, 0, 0, 0.5);
+    --miniou-input-bg: rgba(255, 255, 255, 0.04);
+    --miniou-input-focus-border: rgba(255, 255, 255, 0.28);
+    --miniou-input-focus-ring: rgba(255, 255, 255, 0.06);
+    --miniou-selection: rgba(255, 255, 255, 0.18);
+    --miniou-scrollbar: rgba(255, 255, 255, 0.2);
+    --miniou-nav-active-bg: rgba(255, 255, 255, 0.08);
+    --miniou-nav-active-color: #ffffff;
+    --miniou-link-hover: #ffffff;
+    --miniou-btn-secondary-border: rgba(255, 255, 255, 0.2);
+    --miniou-btn-secondary-hover-bg: rgba(255, 255, 255, 0.06);
+    --miniou-btn-secondary-hover-border: rgba(255, 255, 255, 0.35);
+    --miniou-watermark: rgba(255, 255, 255, 0.07);
+    --miniou-pill-outline-border: rgba(255, 255, 255, 0.35);
+    --miniou-pill-outline-hover-bg: rgba(255, 255, 255, 0.06);
+    --miniou-pill-outline-hover-border: rgba(255, 255, 255, 0.5);
+    --miniou-paper-noise: 0.04;
+    --miniou-chat-assistant-bg: rgba(255, 255, 255, 0.04);
+    --miniou-glass-bg: rgba(255, 255, 255, 0.03);
+    --miniou-hero-glow: rgba(255, 255, 255, 0.08);
+}
+
+@theme inline {
+    --color-background: var(--miniou-bg);
+    --color-foreground: var(--miniou-fg);
+    --color-muted: var(--miniou-muted);
+    --color-muted-dim: var(--miniou-muted-dim);
+    --color-border: var(--miniou-border);
+    --color-card: var(--miniou-card);
+    --color-surface: var(--miniou-surface);
+    --color-surface-hover: var(--miniou-surface-hover);
+    --color-primary: var(--miniou-primary);
+    --color-primary-foreground: var(--miniou-primary-fg);
+    --color-accent: var(--miniou-accent);
+    --color-accent-soft: var(--miniou-accent-soft);
+    --color-sage: var(--miniou-sage);
+    --color-sage-soft: var(--miniou-sage-soft);
+    --color-muted-surface: var(--miniou-muted-surface);
+    --color-ink: var(--miniou-ink);
+    --color-destructive: var(--miniou-destructive);
+    --color-voyance-gray: var(--miniou-voyance-gray);
     --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
     --font-serif: var(--font-instrument-serif), "Georgia", serif;
     --font-mono: var(--font-ibm-plex-mono), ui-monospace, monospace;
@@ -34,12 +122,12 @@ body {
 }
 
 ::selection {
-    background: rgba(255, 255, 255, 0.18);
+    background: var(--miniou-selection);
 }
 
 * {
     scrollbar-width: thin;
-    scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+    scrollbar-color: var(--miniou-scrollbar) transparent;
 }
 
 .font-serif {
@@ -64,7 +152,7 @@ body {
     inset: 0;
     pointer-events: none;
     z-index: 9999;
-    opacity: 0.04;
+    opacity: var(--miniou-paper-noise);
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
@@ -104,7 +192,7 @@ body {
     font-size: clamp(5rem, 18vw, 14rem);
     line-height: 0.85;
     letter-spacing: -0.02em;
-    color: rgba(255, 255, 255, 0.07);
+    color: var(--miniou-watermark);
     user-select: none;
 }
 
@@ -115,7 +203,7 @@ body {
     line-height: 0.95;
     letter-spacing: -0.03em;
     text-transform: lowercase;
-    color: #ffffff;
+    color: var(--color-foreground);
 }
 
 .voyance-manifesto {
@@ -126,18 +214,17 @@ body {
     letter-spacing: -0.02em;
 }
 
-/* Bright white emphasis — no glow */
 .voyance-glow-word {
-    color: #ffffff;
+    color: var(--color-foreground);
 }
 
 .voyance-title-glow {
     font-family: var(--font-display);
-    color: #ffffff;
+    color: var(--color-foreground);
 }
 
 .voyance-body-glow {
-    color: #ffffff;
+    color: var(--color-foreground);
 }
 
 .voyance-pill {
@@ -145,9 +232,9 @@ body {
     align-items: center;
     justify-content: center;
     border-radius: 9999px;
-    border: 1px solid rgba(255, 255, 255, 0.9);
-    background: #ffffff;
-    color: #030505;
+    border: 1px solid var(--color-primary);
+    background: var(--color-primary);
+    color: var(--color-primary-foreground);
     font-size: 0.8125rem;
     font-weight: 500;
     padding: 0.65rem 1.35rem;
@@ -163,9 +250,9 @@ body {
     align-items: center;
     justify-content: center;
     border-radius: 9999px;
-    border: 1px solid rgba(255, 255, 255, 0.35);
+    border: 1px solid var(--miniou-pill-outline-border);
     background: transparent;
-    color: #ffffff;
+    color: var(--color-foreground);
     font-size: 0.8125rem;
     font-weight: 500;
     padding: 0.65rem 1.35rem;
@@ -173,28 +260,28 @@ body {
 }
 
 .voyance-pill-outline:hover {
-    background: rgba(255, 255, 255, 0.06);
-    border-color: rgba(255, 255, 255, 0.5);
+    background: var(--miniou-pill-outline-hover-bg);
+    border-color: var(--miniou-pill-outline-hover-border);
 }
 
 .miniou-panel {
     border-radius: 10px;
     border: 1px solid var(--color-border);
-    background: rgba(255, 255, 255, 0.03);
+    background: var(--miniou-panel-bg);
 }
 
 .miniou-panel-glow {
     border-radius: 10px;
     border: 1px solid var(--color-border);
-    background: rgba(255, 255, 255, 0.04);
-    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.5);
+    background: var(--miniou-panel-glow-bg);
+    box-shadow: var(--miniou-panel-shadow);
 }
 
 .miniou-input {
     width: 100%;
     border-radius: 8px;
     border: 1px solid var(--color-border);
-    background: rgba(255, 255, 255, 0.04);
+    background: var(--miniou-input-bg);
     padding: 0.625rem 0.875rem;
     font-size: 0.875rem;
     color: var(--color-foreground);
@@ -207,8 +294,8 @@ body {
 }
 
 .miniou-input:focus {
-    border-color: rgba(255, 255, 255, 0.28);
-    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.06);
+    border-color: var(--miniou-input-focus-border);
+    box-shadow: 0 0 0 3px var(--miniou-input-focus-ring);
 }
 
 .miniou-btn-primary {
@@ -217,9 +304,9 @@ body {
     justify-content: center;
     gap: 0.375rem;
     border-radius: 9999px;
-    border: 1px solid #ffffff;
-    background: #ffffff;
-    color: #030505;
+    border: 1px solid var(--color-primary);
+    background: var(--color-primary);
+    color: var(--color-primary-foreground);
     font-size: 0.8125rem;
     font-weight: 600;
     transition: opacity 0.15s;
@@ -239,7 +326,7 @@ body {
     justify-content: center;
     gap: 0.375rem;
     border-radius: 9999px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid var(--miniou-btn-secondary-border);
     background: transparent;
     color: var(--color-foreground);
     font-size: 0.8125rem;
@@ -248,8 +335,8 @@ body {
 }
 
 .miniou-btn-secondary:hover:not(:disabled) {
-    background: rgba(255, 255, 255, 0.06);
-    border-color: rgba(255, 255, 255, 0.35);
+    background: var(--miniou-btn-secondary-hover-bg);
+    border-color: var(--miniou-btn-secondary-hover-border);
 }
 
 .miniou-btn-secondary:disabled {
@@ -264,14 +351,14 @@ body {
 }
 
 .miniou-link:hover {
-    color: #ffffff;
+    color: var(--miniou-link-hover);
     text-decoration: underline;
     text-underline-offset: 3px;
 }
 
 .miniou-nav-item-active {
-    background: rgba(255, 255, 255, 0.08);
-    color: #ffffff;
+    background: var(--miniou-nav-active-bg);
+    color: var(--miniou-nav-active-color);
     font-weight: 600;
     border-radius: 8px;
 }
@@ -280,8 +367,8 @@ body {
     width: fit-content;
     max-width: min(85%, 40rem);
     border-radius: 14px 14px 4px 14px;
-    background: #ffffff;
-    color: #030505;
+    background: var(--color-primary);
+    color: var(--color-primary-foreground);
     padding: 0.625rem 0.875rem;
     font-size: 0.875rem;
     line-height: 1.55;
@@ -294,7 +381,7 @@ body {
     max-width: min(85%, 40rem);
     border-radius: 14px 14px 14px 4px;
     border: 1px solid var(--color-border);
-    background: rgba(255, 255, 255, 0.04);
+    background: var(--miniou-chat-assistant-bg);
     padding: 0.625rem 0.875rem;
     font-size: 0.875rem;
     line-height: 1.55;
@@ -304,13 +391,13 @@ body {
 }
 
 .miniou-today-badge {
-    background: #ffffff;
-    color: #030505;
+    background: var(--color-primary);
+    color: var(--color-primary-foreground);
     font-weight: 600;
 }
 
 .miniou-glass-subtle {
-    background: rgba(255, 255, 255, 0.03);
+    background: var(--miniou-glass-bg);
     border: 1px solid var(--color-border);
     border-radius: 8px;
 }
@@ -329,9 +416,19 @@ body {
 .envelope-card {
     border: 1px solid var(--color-border);
     border-radius: 10px;
-    background: rgba(255, 255, 255, 0.03);
+    background: var(--miniou-panel-bg);
 }
 
 .envelope-card::before {
     display: none;
+}
+
+.landing-nav-blur {
+    border-bottom: 1px solid var(--color-border);
+    background: color-mix(in srgb, var(--color-background) 65%, transparent);
+    backdrop-filter: blur(12px);
+}
+
+.landing-hero-glow {
+    background: radial-gradient(circle at 50% 50%, var(--miniou-hero-glow), transparent 70%);
 }

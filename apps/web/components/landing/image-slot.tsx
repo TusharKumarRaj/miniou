@@ -36,14 +36,14 @@ export function ImageSlot({
         return (
             <div
                 className={cn(
-                    "flex flex-col items-center justify-center border border-dashed border-white/15 bg-white/[0.03] text-center",
+                    "flex flex-col items-center justify-center border border-dashed border-border bg-surface text-center",
                     className,
                 )}
             >
-                <span className="font-mono text-[10px] uppercase tracking-widest text-white/25">
+                <span className="font-mono text-[10px] uppercase tracking-widest text-muted-dim">
                     Awaiting asset
                 </span>
-                <span className="mt-1 font-mono text-[11px] text-white/40">{label}</span>
+                <span className="mt-1 font-mono text-[11px] text-muted">{label}</span>
             </div>
         );
     }

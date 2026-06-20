@@ -8,6 +8,18 @@ import {
     listSessionsOutputModel,
     sendMessageInputModel,
     sendMessageOutputModel,
+    prepareEmailDraftInputModel,
+    prepareEmailDraftOutputModel,
+    prepareCalendarDraftInputModel,
+    prepareCalendarDraftOutputModel,
+    confirmEmailSendInputModel,
+    confirmEmailSendOutputModel,
+    cancelEmailPreviewInputModel,
+    cancelEmailPreviewOutputModel,
+    confirmCalendarEventInputModel,
+    confirmCalendarEventOutputModel,
+    cancelCalendarPreviewInputModel,
+    cancelCalendarPreviewOutputModel,
 } from "./model";
 
 import { meetingService } from "../../services";
@@ -73,6 +85,42 @@ export const meetingRouter = router({
             }
         }),
 
+    prepareEmailDraft: authenticatedProcedure
+        .meta({
+            openapi: {
+                method: "POST",
+                path: getPath("/prepareEmailDraft"),
+                tags: TAGS,
+            },
+        })
+        .input(prepareEmailDraftInputModel)
+        .output(prepareEmailDraftOutputModel)
+        .mutation(async ({ ctx, input }) => {
+            try {
+                return await meetingService.prepareEmailDraft(ctx.user.id, input);
+            } catch (err) {
+                mapMeetingError(err);
+            }
+        }),
+
+    prepareCalendarDraft: authenticatedProcedure
+        .meta({
+            openapi: {
+                method: "POST",
+                path: getPath("/prepareCalendarDraft"),
+                tags: TAGS,
+            },
+        })
+        .input(prepareCalendarDraftInputModel)
+        .output(prepareCalendarDraftOutputModel)
+        .mutation(async ({ ctx, input }) => {
+            try {
+                return await meetingService.prepareCalendarDraft(ctx.user.id, input);
+            } catch (err) {
+                mapMeetingError(err);
+            }
+        }),
+
     getHistory: authenticatedProcedure
         .meta({
             openapi: {
@@ -86,6 +134,78 @@ export const meetingRouter = router({
         .query(async ({ ctx, input }) => {
             try {
                 return await meetingService.getHistory(ctx.user.id, input);
+            } catch (err) {
+                mapMeetingError(err);
+            }
+        }),
+
+    confirmEmailSend: authenticatedProcedure
+        .meta({
+            openapi: {
+                method: "POST",
+                path: getPath("/confirmEmailSend"),
+                tags: TAGS,
+            },
+        })
+        .input(confirmEmailSendInputModel)
+        .output(confirmEmailSendOutputModel)
+        .mutation(async ({ ctx, input }) => {
+            try {
+                return await meetingService.confirmEmailSend(ctx.user.id, input);
+            } catch (err) {
+                mapMeetingError(err);
+            }
+        }),
+
+    cancelEmailPreview: authenticatedProcedure
+        .meta({
+            openapi: {
+                method: "POST",
+                path: getPath("/cancelEmailPreview"),
+                tags: TAGS,
+            },
+        })
+        .input(cancelEmailPreviewInputModel)
+        .output(cancelEmailPreviewOutputModel)
+        .mutation(async ({ ctx, input }) => {
+            try {
+                return await meetingService.cancelEmailPreview(ctx.user.id, input);
+            } catch (err) {
+                mapMeetingError(err);
+            }
+        }),
+
+    confirmCalendarEvent: authenticatedProcedure
+        .meta({
+            openapi: {
+                method: "POST",
+                path: getPath("/confirmCalendarEvent"),
+                tags: TAGS,
+            },
+        })
+        .input(confirmCalendarEventInputModel)
+        .output(confirmCalendarEventOutputModel)
+        .mutation(async ({ ctx, input }) => {
+            try {
+                return await meetingService.confirmCalendarEvent(ctx.user.id, input);
+            } catch (err) {
+                mapMeetingError(err);
+            }
+        }),
+
+    cancelCalendarPreview: authenticatedProcedure
+        .meta({
+            openapi: {
+                method: "POST",
+                path: getPath("/cancelCalendarPreview"),
+                tags: TAGS,
+            },
+        })
+        .input(cancelCalendarPreviewInputModel)
+        .output(cancelCalendarPreviewOutputModel)
+        .mutation(async ({ ctx, input }) => {
+            try {
+                return await meetingService.cancelCalendarPreview(ctx.user.id, input);
             } catch (err) {
                 mapMeetingError(err);
             }

@@ -4,14 +4,15 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 
 import { MiniouButton, MiniouButtonLink } from "~/components/ui/miniou";
+import { ThemeToggle } from "~/components/ui/theme-toggle";
 import { useLoggedInUser, useSignOut } from "~/hooks/api/auth";
 import { cn } from "~/lib/cn";
 
 const NAV_LINKS = [
-    { href: "/mail", label: "Mail" },
-    { href: "/calendar", label: "Calendar" },
-    { href: "/chat", label: "Chat" },
-    { href: "/settings/integrations", label: "Settings" },
+    { href: "/mail", label: "Mail", coachmarkId: "nav-mail" },
+    { href: "/calendar", label: "Calendar", coachmarkId: "nav-calendar" },
+    { href: "/chat", label: "Chat", coachmarkId: "nav-chat" },
+    { href: "/settings/integrations", label: "Settings", coachmarkId: "nav-settings" },
 ] as const;
 
 function LogoMark() {
@@ -27,9 +28,7 @@ export function AppNav({ variant = "app" }: { variant?: "landing" | "app" | "min
     const signOut = useSignOut();
 
     const headerClass =
-        variant === "landing"
-            ? "border-white/6 bg-background/40 backdrop-blur-xl"
-            : "border-border bg-background/80 backdrop-blur-xl";
+        variant === "landing" ? "landing-nav-blur" : "border-border bg-background/80 backdrop-blur-xl";
 
     if (variant === "minimal") {
         return (
@@ -56,6 +55,7 @@ export function AppNav({ variant = "app" }: { variant?: "landing" | "app" | "min
                                 <Link
                                     key={link.href}
                                     href={link.href}
+                                    data-coachmark={link.coachmarkId}
                                     className={cn(
                                         "rounded-lg px-3 py-1.5 text-[13px] font-medium transition",
                                         active
@@ -71,10 +71,11 @@ export function AppNav({ variant = "app" }: { variant?: "landing" | "app" | "min
                 )}
 
                 <div className="ml-auto flex items-center gap-2">
+                    <ThemeToggle coachmarkId="nav-theme" />
                     {user ? (
                         <>
                             {variant === "landing" && (
-                                <MiniouButtonLink href="/mail" size="sm">
+                                <MiniouButtonLink href="/chat" size="sm">
                                     Open app
                                 </MiniouButtonLink>
                             )}

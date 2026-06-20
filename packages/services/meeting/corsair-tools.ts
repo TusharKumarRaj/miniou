@@ -3,14 +3,26 @@ import { tool } from "ai";
 import { z } from "zod";
 
 import { dynamicObject } from "../shared/dynamic-schema";
-import { searchGmailRecipients, sendGmailEmail } from "../gmail/client";
+import { searchGmailRecipients } from "../gmail/client";
+
+import type { PendingCalendarDraft } from "@repo/database/models/chat-session";
 
 type TenantCorsair = ReturnType<typeof import("@repo/corsair").withUserTenant>;
 
-const sendGmailEmailInputSchema = dynamicObject({
+const prepareGmailEmailInputSchema = dynamicObject({
     to: () => z.string().min(1).describe("Recipient email address"),
     subject: () => z.string().describe("Email subject line"),
     body: () => z.string().describe("Plain-text email body"),
+});
+
+const prepareCalendarEventInputSchema = dynamicObject({
+    title: () => z.string().min(1).describe("Event title"),
+    description: () => z.string().describe("Event description"),
+    location: () => z.string().describe("Location or empty string"),
+    start: () => z.string().describe("Start time ISO 8601 UTC"),
+    end: () => z.string().describe("End time ISO 8601 UTC"),
+    timeZone: () => z.string().describe("IANA timezone"),
+    attendeeEmails: () => z.array(z.string()).describe("Attendee email addresses"),
 });
 
 const searchRecipientsInputSchema = dynamicObject({
@@ -20,6 +32,39 @@ const searchRecipientsInputSchema = dynamicObject({
             .min(1)
             .describe("Name or email fragment to search in recent Gmail contacts"),
 });
+
+type PrepareEmailHandler = (draft: { to: string; subject: string; body: string }) => Promise<void>;
+type PrepareCalendarHandler = (draft: PendingCalendarDraft) => Promise<void>;
+
+const RUN_SCRIPT_GMAIL_SEND_MESSAGE =
+    "Gmail is not available in run_script. Call prepare_gmail_email with to, subject, and body instead. The user must review and confirm the draft in the UI before it is sent.";
+
+const RUN_SCRIPT_CALENDAR_MUTATION_MESSAGE =
+    "Calendar create/update/delete is not available in run_script. Call prepare_google_calendar_event instead. The user must review and confirm the event in the UI before it is created.";
+
+function blocksGmailSendScript(code: string) {
+    const normalized = code.toLowerCase();
+
+    if (/corsair\.gmail|gmail\.api/.test(normalized)) return true;
+    if (/gmail\.api\.messages\.send/.test(normalized)) return true;
+    if (/messages\.send\s*\(/.test(normalized) && /gmail/.test(normalized)) return true;
+    if (/sendgmailemail/.test(normalized.replace(/[^a-z0-9.]/g, ""))) return true;
+
+    return false;
+}
+
+function blocksCalendarMutationScript(code: string) {
+    const normalized = code.toLowerCase();
+
+    if (!/googlecalendar|google\.calendar/.test(normalized)) return false;
+
+    if (/events\.(create|update|patch|delete|insert)/.test(normalized)) return true;
+    if (/\.events\.create\s*\(/.test(normalized)) return true;
+    if (/\.events\.update\s*\(/.test(normalized)) return true;
+    if (/\.events\.delete\s*\(/.test(normalized)) return true;
+
+    return false;
+}
 
 function mcpResultToText(result: Awaited<ReturnType<CorsairToolDef["handler"]>>) {
     const text =
@@ -35,21 +80,50 @@ function mcpResultToText(result: Awaited<ReturnType<CorsairToolDef["handler"]>>)
     return text;
 }
 
-export function buildMeetingTools(tenantCorsair: TenantCorsair) {
+export function buildMeetingTools(
+    tenantCorsair: TenantCorsair,
+    options: {
+        onPrepareEmail: PrepareEmailHandler;
+        onPrepareCalendar: PrepareCalendarHandler;
+    },
+) {
     const defs = buildCorsairToolDefs({
         corsair: tenantCorsair,
         setup: false,
     });
 
     const corsairTools = Object.fromEntries(
-        defs.map((def) => [
-            def.name,
-            tool({
-                description: def.description,
-                inputSchema: z.object(def.shape),
-                execute: async (args) => mcpResultToText(await def.handler(args)),
-            }),
-        ]),
+        defs.map((def) => {
+            if (def.name === "run_script") {
+                return [
+                    def.name,
+                    tool({
+                        description: `${def.description} IMPORTANT: Never send Gmail or mutate Google Calendar with this tool — use prepare_gmail_email or prepare_google_calendar_event instead. Use run_script only to read/list calendar data.`,
+                        inputSchema: z.object(def.shape),
+                        execute: async (args) => {
+                            const { code } = args as { code: string };
+                            if (blocksGmailSendScript(code)) {
+                                return RUN_SCRIPT_GMAIL_SEND_MESSAGE;
+                            }
+                            if (blocksCalendarMutationScript(code)) {
+                                return RUN_SCRIPT_CALENDAR_MUTATION_MESSAGE;
+                            }
+
+                            return mcpResultToText(await def.handler(args));
+                        },
+                    }),
+                ];
+            }
+
+            return [
+                def.name,
+                tool({
+                    description: def.description,
+                    inputSchema: z.object(def.shape),
+                    execute: async (args) => mcpResultToText(await def.handler(args)),
+                }),
+            ];
+        }),
     );
 
     return {
@@ -69,24 +143,40 @@ export function buildMeetingTools(tenantCorsair: TenantCorsair) {
 
                 return [
                     `Found ${results.length} recipient(s) matching "${input.query}":`,
-                    ...results.map(
-                        (r, i) => `${i + 1}. ${r.name} <${r.email}>`,
-                    ),
+                    ...results.map((r, i) => `${i + 1}. ${r.name} <${r.email}>`),
                 ].join("\n");
             },
         }),
-        send_gmail_email: tool({
+        prepare_gmail_email: tool({
             description:
-                "Send a plain-text email through the user's connected Gmail account. Use this for all email send requests.",
-            inputSchema: sendGmailEmailInputSchema,
+                "REQUIRED to create any email. Saves a draft in the Gmail-style compose UI for user review — never sends. You write subject and body. Call immediately when the user gives a recipient and any topic or date — do not ask for subject/body/time. Use the exact date or day the user mentioned (e.g. next Sunday, not tomorrow unless they said tomorrow).",
+            inputSchema: prepareGmailEmailInputSchema,
             execute: async (input) => {
-                try {
-                    const result = await sendGmailEmail(tenantCorsair, input);
-                    return `Email sent to ${result.to} with subject "${result.subject}" (message id: ${result.messageId ?? "unknown"}).`;
-                } catch (err) {
-                    const message = err instanceof Error ? err.message : String(err);
-                    throw new Error(`Failed to send Gmail message: ${message}`);
-                }
+                await options.onPrepareEmail({
+                    to: input.to.trim(),
+                    subject: input.subject.trim(),
+                    body: input.body.trim(),
+                });
+
+                return `Email draft saved for ${input.to.trim()}. The compose preview is shown in the UI. Tell the user to review it and click Send — do not repeat the subject or body in chat.`;
+            },
+        }),
+        prepare_google_calendar_event: tool({
+            description:
+                "REQUIRED to create any calendar event. Saves a draft in the calendar preview UI for user review — never creates directly. You write title, times, attendees, and description. Call immediately when the user asks to schedule/book/fix a meeting — do not ask for missing details if you can infer them. Use exact dates the user mentioned.",
+            inputSchema: prepareCalendarEventInputSchema,
+            execute: async (input) => {
+                await options.onPrepareCalendar({
+                    title: input.title.trim(),
+                    description: input.description.trim(),
+                    location: input.location.trim(),
+                    start: input.start.trim(),
+                    end: input.end.trim(),
+                    timeZone: input.timeZone.trim() || "UTC",
+                    attendeeEmails: input.attendeeEmails.map((email) => email.trim()).filter(Boolean),
+                });
+
+                return `Calendar event draft saved for "${input.title.trim()}". The preview is shown in the UI. Tell the user to review it and click Create — do not repeat event details in chat.`;
             },
         }),
     };

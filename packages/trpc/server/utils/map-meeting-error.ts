@@ -2,6 +2,7 @@ import { TRPCError } from "@trpc/server";
 
 import { MeetingScopeError } from "@repo/services/meeting/guardrails";
 import { MeetingRateLimitError } from "@repo/services/meeting/rate-limit";
+import { ChatAttachmentError } from "@repo/services/meeting/attachments";
 
 export function mapMeetingError(err: unknown): never {
     if (err instanceof TRPCError) {
@@ -14,6 +15,10 @@ export function mapMeetingError(err: unknown): never {
 
     if (err instanceof MeetingRateLimitError) {
         throw new TRPCError({ code: "TOO_MANY_REQUESTS", message: err.message });
+    }
+
+    if (err instanceof ChatAttachmentError) {
+        throw new TRPCError({ code: "BAD_REQUEST", message: err.message });
     }
 
     if (err instanceof Error) {

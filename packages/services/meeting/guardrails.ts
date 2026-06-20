@@ -77,7 +77,14 @@ ${message}
     return object.allowed;
 }
 
-export async function assertMeetingScope(message: string): Promise<void> {
+export async function assertMeetingScope(
+    message: string,
+    options?: { hasAttachments?: boolean },
+): Promise<void> {
+    if (options?.hasAttachments) {
+        return;
+    }
+
     if (matchesOffTopicPattern(message)) {
         throw new MeetingScopeError();
     }

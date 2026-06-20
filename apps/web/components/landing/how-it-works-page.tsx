@@ -45,7 +45,7 @@ export function HowItWorksPage() {
 
                 <ol className="mt-14 space-y-10">
                     {STEPS.map((step) => (
-                        <li key={step.num} className="grid gap-4 border-t border-white/8 pt-8 sm:grid-cols-[4rem_1fr]">
+                        <li key={step.num} className="grid gap-4 border-t border-border pt-8 sm:grid-cols-[4rem_1fr]">
                             <p className="font-display text-2xl font-bold text-muted-dim">{step.num}</p>
                             <div>
                                 <h2 className="font-display text-lg font-semibold uppercase tracking-wide text-foreground">
@@ -57,7 +57,7 @@ export function HowItWorksPage() {
                     ))}
                 </ol>
 
-                <section className="mt-16 border-t border-white/8 pt-10">
+                <section className="mt-16 border-t border-border pt-10">
                     <h2 className="font-display text-sm font-semibold uppercase tracking-widest text-foreground">
                         Example prompts
                     </h2>
@@ -65,7 +65,7 @@ export function HowItWorksPage() {
                         {EXAMPLES.map((example) => (
                             <li
                                 key={example}
-                                className="rounded-lg border border-white/8 bg-white/[0.03] px-4 py-3 text-[13px] leading-relaxed text-muted"
+                                className="rounded-lg border border-border bg-surface px-4 py-3 text-[13px] leading-relaxed text-muted"
                             >
                                 &ldquo;{example}&rdquo;
                             </li>
@@ -73,7 +73,7 @@ export function HowItWorksPage() {
                     </ul>
                 </section>
 
-                <section className="mt-16 flex flex-col gap-4 border-t border-white/8 pt-10 sm:flex-row sm:items-center sm:justify-between">
+                <section className="mt-16 flex flex-col gap-4 border-t border-border pt-10 sm:flex-row sm:items-center sm:justify-between">
                     <div>
                         <p className="font-display text-lg font-semibold tracking-tight text-foreground">
                             Ready to try it?
