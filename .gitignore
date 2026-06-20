@@ -37,6 +37,5 @@ yarn-error.log*
 .DS_Store
 *.pem
 
-# Private docs (local only)
-docs/phase-3-onward-detail.md
-docs/ui-agent-guide.md
+# Local docs only (not for GitHub)
+docs/
