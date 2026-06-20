@@ -6,7 +6,6 @@ export const usersTable = pgTable("users", {
     fullName: varchar("full_name", { length: 100 }).notNull(),
     email: varchar("email", { length: 255 }).notNull().unique(),
     passwordHash: text("password_hash"),
-    emailVerifiedAt: timestamp("email_verified_at"),
 
     createdAt: timestamp("created_at").defaultNow(),
     updatedAt: timestamp("updated_at").$onUpdate(() => new Date()),

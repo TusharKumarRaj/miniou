@@ -2,6 +2,8 @@ import { authenticatedProcedure, router } from "../../trpc";
 import {
     getMessageInputModel,
     getMessageOutputModel,
+    getThreadInputModel,
+    getThreadOutputModel,
     listInboxInputModel,
     listInboxOutputModel,
     sendEmailInputModel,
@@ -48,6 +50,24 @@ export const gmailRouter = router({
         .query(async ({ ctx, input }) => {
             try {
                 return await gmailService.getMessage(ctx.user.id, input);
+            } catch (err) {
+                mapGmailError(err);
+            }
+        }),
+
+    getThread: authenticatedProcedure
+        .meta({
+            openapi: {
+                method: "GET",
+                path: getPath("/getThread"),
+                tags: TAGS,
+            },
+        })
+        .input(getThreadInputModel)
+        .output(getThreadOutputModel)
+        .query(async ({ ctx, input }) => {
+            try {
+                return await gmailService.getThread(ctx.user.id, input);
             } catch (err) {
                 mapGmailError(err);
             }

@@ -4,12 +4,15 @@ import IntegrationService from "../integration";
 
 import {
     fetchGmailMessage,
+    fetchGmailThread,
     fetchLabelMessages,
     sendGmailEmail,
 } from "./client";
 import {
     getMessageInputModel,
     type GetMessageInputModel,
+    getThreadInputModel,
+    type GetThreadInputModel,
     listInboxInputModel,
     type ListInboxInputModel,
     sendEmailInputModel,
@@ -45,6 +48,14 @@ export default class GmailService {
 
         const tenant = withUserTenant(userId);
         return fetchGmailMessage(tenant, messageId);
+    }
+
+    public async getThread(userId: string, payload: GetThreadInputModel) {
+        const { threadId } = await getThreadInputModel.parseAsync(payload);
+        await this.requireGmail(userId);
+
+        const tenant = withUserTenant(userId);
+        return fetchGmailThread(tenant, threadId);
     }
 
     public async sendEmail(userId: string, payload: SendEmailInputModel) {

@@ -35,46 +35,46 @@ function IntegrationCard({
             <div className="grid flex-1 grid-cols-[2.75rem_minmax(0,1fr)] gap-x-4">
                 <div
                     className={cn(
-                        "flex h-11 w-11 items-center justify-center rounded-lg border",
+                        "flex h-11 w-11 items-center justify-center rounded-xl border",
                         connected
-                            ? "border-miniou-red/40 bg-miniou-red/10 text-miniou-red"
-                            : "border-white/10 bg-white/5 text-white/50",
+                            ? "border-accent/30 bg-accent-soft text-accent"
+                            : "border-border bg-muted-surface text-muted",
                     )}
                 >
                     {icon}
                 </div>
                 <div className="min-w-0">
                     <div className="flex min-h-11 flex-wrap items-center gap-x-2 gap-y-1">
-                        <h3 className="font-semibold leading-none text-white">{title}</h3>
+                        <h3 className="font-semibold leading-none">{title}</h3>
                         <span
                             className={cn(
-                                "rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase leading-none tracking-wider",
+                                "rounded-full px-2.5 py-0.5 text-xs font-medium",
                                 connected
-                                    ? "bg-miniou-red/15 text-miniou-red"
-                                    : "bg-white/5 text-white/45",
+                                    ? "bg-accent-soft text-accent"
+                                    : "bg-muted-surface text-muted",
                             )}
                         >
                             {connected ? "Connected" : "Not connected"}
                         </span>
                     </div>
-                    <p className="mt-2 text-sm leading-relaxed text-white/50">{description}</p>
+                    <p className="mt-2 text-sm leading-relaxed text-muted">{description}</p>
                 </div>
             </div>
 
-            <div className="mt-4 border-t border-white/10 pt-4">
+            <div className="mt-4 border-t border-border pt-4">
                 {connected && href ? (
-                    <MiniouButtonLink href={href} size="sm" className="inline-block">
+                    <MiniouButtonLink href={href} size="sm" className="inline-flex">
                         Open {title}
                     </MiniouButtonLink>
                 ) : (
                     <MiniouButton
                         type="button"
                         size="sm"
-                        className="inline-block"
+                        className="inline-flex"
                         onClick={onConnect}
                         disabled={connectPending}
                     >
-                        {connectPending ? "Connecting..." : "Connect"}
+                        {connectPending ? "Connecting…" : "Connect"}
                     </MiniouButton>
                 )}
             </div>
@@ -121,34 +121,24 @@ export default function IntegrationsPage() {
 
     if (userLoading || statusLoading) {
         return (
-            <WorkspaceShell background="gmail" activeWorkspace="settings">
+            <WorkspaceShell activeWorkspace="settings">
                 <MiniouLoading />
             </WorkspaceShell>
         );
     }
 
     return (
-        <WorkspaceShell
-            background="gmail"
-            activeWorkspace="settings"
-            mainClassName="min-h-0 overflow-y-auto"
-        >
+        <WorkspaceShell activeWorkspace="settings" mainClassName="min-h-0 overflow-y-auto">
             <div className="pb-4">
-                <p className="text-[10px] font-semibold uppercase tracking-[0.35em] text-miniou-red">
-                    Settings
-                </p>
-                <h1 className="mt-1 text-2xl font-semibold text-white">Integrations</h1>
-                {user && (
-                    <p className="mt-1 text-sm text-white/50">Signed in as {user.email}</p>
-                )}
+                <p className="text-sm font-medium text-muted">Settings</p>
+                <h1 className="mt-1 text-2xl font-bold tracking-tight">Integrations</h1>
+                {user && <p className="mt-1 text-sm text-muted">Signed in as {user.email}</p>}
             </div>
 
-            <div className="space-y-6 pb-4">
+            <div className="space-y-8 pb-4">
                 <section>
-                    <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-white/45">
-                        Connected services
-                    </p>
-                    <p className="mb-4 text-sm text-white/50">
+                    <h2 className="text-sm font-semibold">Connected services</h2>
+                    <p className="mt-1 mb-4 text-sm text-muted">
                         Connect Google so miniou can send email and manage your calendar from chat.
                     </p>
                     <div className="grid gap-4 lg:grid-cols-2 lg:items-stretch">
@@ -174,42 +164,35 @@ export default function IntegrationsPage() {
                 </section>
 
                 <section>
-                    <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-white/45">
-                        Pricing &amp; billing
-                    </p>
-                    <MiniouPanel className="p-5">
+                    <h2 className="text-sm font-semibold">Pricing & billing</h2>
+                    <MiniouPanel className="mt-4 p-5">
                         <div className="flex flex-wrap items-center justify-between gap-4">
                             <div className="min-w-0 flex-1">
-                                <h3 className="text-lg font-semibold leading-none text-white">
-                                    Early access
-                                </h3>
-                                <p className="mt-2 text-sm leading-relaxed text-white/50">
+                                <h3 className="text-lg font-semibold leading-none">Early access</h3>
+                                <p className="mt-2 text-sm leading-relaxed text-muted">
                                     You&apos;re on the free early-access plan while miniou is in beta.
                                 </p>
                             </div>
                             <div className="shrink-0 text-right">
-                                <p className="miniou-stat-value text-3xl leading-none text-white">$0</p>
-                                <p className="mt-1 text-xs text-white/45">per month</p>
+                                <p className="text-3xl font-bold leading-none">$0</p>
+                                <p className="mt-1 text-xs text-muted">per month</p>
                             </div>
                         </div>
 
-                        <ul className="mt-5 space-y-2 border-t border-white/10 pt-5">
+                        <ul className="mt-5 space-y-2 border-t border-border pt-5">
                             {PLAN_FEATURES.map((feature) => (
-                                <li
-                                    key={feature}
-                                    className="flex items-center gap-2 text-sm text-white/70"
-                                >
-                                    <span className="text-miniou-red">✓</span>
+                                <li key={feature} className="flex items-center gap-2 text-sm text-foreground/80">
+                                    <span className="text-accent">✓</span>
                                     {feature}
                                 </li>
                             ))}
                         </ul>
 
-                        <div className="mt-5 flex flex-wrap items-center gap-3 border-t border-white/10 pt-5">
+                        <div className="mt-5 flex flex-wrap items-center gap-3 border-t border-border pt-5">
                             <MiniouButton type="button" size="sm" disabled>
                                 Manage billing
                             </MiniouButton>
-                            <span className="text-xs text-white/40">Paid plans coming soon</span>
+                            <span className="text-xs text-muted">Paid plans coming soon</span>
                         </div>
                     </MiniouPanel>
                 </section>

@@ -10,24 +10,17 @@ import { getOAuthStateCookieOptions } from "@repo/trpc/server/utils/session-cook
 import { env } from "../../env";
 
 const REDIRECT_URI = `${env.BASE_URL}/api/integrations/callback`;
+const INTEGRATIONS_URL = `${env.WEB_URL}/settings/integrations`;
 const webhookService = new WebhookService();
 
-
-
-function escapeHtml(value: string): string {
-
-    return value
-
-        .replace(/&/g, "&amp;")
-
-        .replace(/</g, "&lt;")
-
-        .replace(/>/g, "&gt;")
-
-        .replace(/"/g, "&quot;")
-
-        .replace(/'/g, "&#39;");
-
+function redirectToIntegrations(res: Response, params?: Record<string, string>) {
+    const url = new URL(INTEGRATIONS_URL);
+    if (params) {
+        for (const [key, value] of Object.entries(params)) {
+            url.searchParams.set(key, value);
+        }
+    }
+    res.redirect(302, url.toString());
 }
 
 
@@ -49,29 +42,15 @@ export async function callbackHandler(req: Request, res: Response) {
 
 
     if (error) {
-
         clearOAuthCookie();
-
-        res.status(400).send(
-
-            `<html><body><h2>Authorization failed</h2><p>${escapeHtml(error)}</p><p><a href="${env.WEB_URL}/settings/integrations">Back to integrations</a></p></body></html>`,
-
-        );
-
+        redirectToIntegrations(res, { error });
         return;
-
     }
 
-
-
     if (!code || !state) {
-
         clearOAuthCookie();
-
-        res.status(400).send("<p>Missing code or state parameter.</p>");
-
+        redirectToIntegrations(res, { error: "missing_code_or_state" });
         return;
-
     }
 
 
@@ -81,27 +60,16 @@ export async function callbackHandler(req: Request, res: Response) {
 
 
     if (!storedState || storedState !== state) {
-
         clearOAuthCookie();
-
-        res.status(400).send("<p>Invalid state. Possible CSRF attempt.</p>");
-
+        redirectToIntegrations(res, { error: "invalid_state" });
         return;
-
     }
 
-
-
     const stateValid = await consumeOAuthState(state);
-
     if (!stateValid) {
-
         clearOAuthCookie();
-
-        res.status(400).send("<p>Invalid or expired OAuth state.</p>");
-
+        redirectToIntegrations(res, { error: "expired_state" });
         return;
-
     }
 
 
@@ -122,28 +90,11 @@ export async function callbackHandler(req: Request, res: Response) {
             await webhookService.registerAfterConnect(result.tenantId, result.plugin);
         }
 
-        res.send(
-
-            `<html><body><h2>Connected!</h2>` +
-
-                `<p>Plugin <strong>${escapeHtml(result.plugin)}</strong> authorized.</p>` +
-
-                `<p><a href="${env.WEB_URL}/settings/integrations">Back to integrations</a></p></body></html>`,
-
-        );
-
+        redirectToIntegrations(res, { connected: result.plugin });
     } catch (err) {
-
-        const message = err instanceof Error ? err.message : String(err);
-
-        res.status(500).send(
-
-            `<html><body><h2>OAuth error</h2><p>${escapeHtml(message)}</p><p><a href="${env.WEB_URL}/settings/integrations">Back to integrations</a></p></body></html>`,
-
-        );
-
+        console.error("OAuth callback failed:", err);
+        redirectToIntegrations(res, { error: "oauth_failed" });
     }
-
 }
 
 

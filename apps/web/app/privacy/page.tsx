@@ -15,7 +15,7 @@ export default function PrivacyPage() {
                     miniou (&quot;we&quot;, &quot;us&quot;) operates{" "}
                     <a
                         href="https://miniou.tusharcodes.tech"
-                        className="text-white underline decoration-white/30 underline-offset-2 hover:decoration-white"
+                        className="text-foreground underline decoration-border underline-offset-2 hover:decoration-foreground"
                     >
                         miniou.tusharcodes.tech
                     </a>
@@ -27,22 +27,22 @@ export default function PrivacyPage() {
             <LegalSection title="Information we collect">
                 <ul className="list-disc space-y-2 pl-5">
                     <li>
-                        <strong className="text-white/90">Account data:</strong> name, email address,
+                        <strong className="text-foreground">Account data:</strong> name, email address,
                         and password hash when you sign up with email, or profile information from
                         Google when you sign in with Google.
                     </li>
                     <li>
-                        <strong className="text-white/90">Google integration data:</strong> when you
+                        <strong className="text-foreground">Google integration data:</strong> when you
                         connect Gmail or Google Calendar, we store OAuth tokens needed to access your
                         mail and calendar on your behalf. We read and send email and manage calendar
                         events only as directed by you in the app or chat.
                     </li>
                     <li>
-                        <strong className="text-white/90">Chat data:</strong> messages you send in
+                        <strong className="text-foreground">Chat data:</strong> messages you send in
                         miniou chat and AI responses, stored to provide conversation history.
                     </li>
                     <li>
-                        <strong className="text-white/90">Usage data:</strong> basic server logs (IP
+                        <strong className="text-foreground">Usage data:</strong> basic server logs (IP
                         address, request timestamps) for security and rate limiting.
                     </li>
                 </ul>
@@ -59,11 +59,11 @@ export default function PrivacyPage() {
             <LegalSection title="Third-party services">
                 <ul className="list-disc space-y-2 pl-5">
                     <li>
-                        <strong className="text-white/90">Google:</strong> Gmail and Google Calendar
+                        <strong className="text-foreground">Google:</strong> Gmail and Google Calendar
                         access via OAuth. Google&apos;s privacy policy applies to data held by Google.
                     </li>
                     <li>
-                        <strong className="text-white/90">OpenAI:</strong> chat messages may be sent to
+                        <strong className="text-foreground">OpenAI:</strong> chat messages may be sent to
                         OpenAI to generate responses when you use AI features.
                     </li>
                 </ul>
@@ -90,7 +90,7 @@ export default function PrivacyPage() {
                     For privacy questions, contact the operator of miniou at{" "}
                     <a
                         href="mailto:support@tusharcodes.tech"
-                        className="text-white underline decoration-white/30 underline-offset-2 hover:decoration-white"
+                        className="text-foreground underline decoration-border underline-offset-2 hover:decoration-foreground"
                     >
                         support@tusharcodes.tech
                     </a>

@@ -148,13 +148,13 @@ export function MonthCalendarGrid({
                 </div>
             </div>
 
-            <div className="grid grid-cols-7 border-b border-white/10 pb-2 text-center text-xs font-medium text-white/50">
+            <div className="grid grid-cols-7 border-b border-border pb-2 text-center text-xs font-medium text-muted">
                 {WEEKDAYS.map((day) => (
                     <div key={day}>{day}</div>
                 ))}
             </div>
 
-            <div className="grid min-h-0 flex-1 auto-rows-fr grid-cols-7 gap-px overflow-hidden rounded-xl border border-white/10 bg-white/10">
+            <div className="grid min-h-0 flex-1 auto-rows-fr grid-cols-7 gap-px overflow-hidden rounded-xl border border-border bg-border">
                 {cells.map((date) => {
                     const key = toDateKey(date);
                     const inMonth = date >= firstOfMonth && date <= lastOfMonth;
@@ -167,7 +167,7 @@ export function MonthCalendarGrid({
                             key={key}
                             className={`miniou-glass-subtle flex min-h-[88px] flex-col p-1.5 sm:min-h-[100px] sm:p-2 ${
                                 !inMonth ? "opacity-40" : ""
-                            } ${isSelectedDay ? "ring-1 ring-inset ring-white/30" : ""}`}
+                            } ${isSelectedDay ? "ring-1 ring-inset ring-foreground/20" : ""}`}
                         >
                             <button
                                 type="button"
@@ -175,7 +175,7 @@ export function MonthCalendarGrid({
                                 className={`mb-1 flex h-7 w-7 items-center justify-center rounded-full text-sm ${
                                     isToday
                                         ? "miniou-today-badge"
-                                        : "text-white/80 hover:bg-white/10"
+                                        : "text-foreground hover:bg-muted-surface"
                                 }`}
                             >
                                 {date.getDate()}
@@ -199,8 +199,8 @@ export function MonthCalendarGrid({
                                         <span
                                             className={
                                                 selectedEventId === event.id
-                                                    ? "text-white/70 sm:mr-1"
-                                                    : "text-white/55 sm:mr-1"
+                                                    ? "opacity-80 sm:mr-1"
+                                                    : "opacity-70 sm:mr-1"
                                             }
                                         >
                                             {formatEventTime(event.start)}
@@ -209,7 +209,7 @@ export function MonthCalendarGrid({
                                     </button>
                                 ))}
                                 {dayEvents.length > 3 && (
-                                    <p className="px-1 text-[10px] text-white/40">
+                                    <p className="px-1 text-[10px] text-muted">
                                         +{dayEvents.length - 3} more
                                     </p>
                                 )}

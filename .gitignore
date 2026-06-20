@@ -36,3 +36,7 @@ yarn-error.log*
 # Misc
 .DS_Store
 *.pem
+
+# Private docs (local only)
+docs/phase-3-onward-detail.md
+docs/ui-agent-guide.md

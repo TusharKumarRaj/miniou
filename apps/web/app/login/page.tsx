@@ -37,22 +37,20 @@ function LoginForm() {
     const errorMessage = signIn.error?.message ?? urlError;
 
     return (
-        <AppShell variant="auth" background="signin">
-            <MiniouPanel glow className="w-full max-w-md">
-                <form onSubmit={handleSubmit} className="space-y-4 p-8">
+        <AppShell variant="auth">
+            <MiniouPanel glow className="w-full max-w-sm p-7">
+                <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
-                        <p className="text-[10px] font-semibold uppercase tracking-[0.35em] text-miniou-red">
-                            Welcome back
-                        </p>
-                        <h1 className="mt-1 text-2xl font-semibold">Sign in</h1>
+                        <h1 className="text-2xl font-bold tracking-tight">Sign in</h1>
+                        <p className="mt-1 text-[13px] text-muted">Access your workspace</p>
                     </div>
 
                     <GoogleSignInButton />
 
-                    <div className="flex items-center gap-3 text-[10px] uppercase tracking-[0.25em] text-white/35">
-                        <span className="h-px flex-1 bg-white/10" />
-                        <span>or</span>
-                        <span className="h-px flex-1 bg-white/10" />
+                    <div className="flex items-center gap-3 text-[12px] font-medium text-muted">
+                        <span className="h-px flex-1 bg-border" />
+                        or
+                        <span className="h-px flex-1 bg-border" />
                     </div>
 
                     <MiniouInput
@@ -70,17 +68,15 @@ function LoginForm() {
                         required
                     />
 
-                    {errorMessage && <p className="text-sm text-miniou-red">{errorMessage}</p>}
+                    {errorMessage && <p className="text-[13px] text-destructive">{errorMessage}</p>}
 
                     <MiniouButton type="submit" disabled={signIn.isPending} className="w-full">
-                        {signIn.isPending ? "Signing in..." : "Sign in with email"}
+                        {signIn.isPending ? "Signing in…" : "Continue"}
                     </MiniouButton>
 
-                    <p className="text-center text-sm text-white/50">
+                    <p className="text-center text-[13px] text-muted">
                         No account?{" "}
-                        <MiniouLink href="/signup" className="no-underline hover:underline">
-                            Sign up
-                        </MiniouLink>
+                        <MiniouLink href="/signup">Sign up</MiniouLink>
                     </p>
                 </form>
             </MiniouPanel>

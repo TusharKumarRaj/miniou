@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-import { AppShell } from "~/components/layout/app-shell";
+import { WorkspaceShell } from "~/components/workspace/shell";
 import {
     MiniouButton,
     MiniouInput,
@@ -74,44 +74,40 @@ export function ChatView({ sessionId }: { sessionId?: string }) {
 
     if (userLoading || statusLoading || sessionsLoading || (bootstrapping && !sessionId)) {
         return (
-            <AppShell background="gmail">
+            <WorkspaceShell activeWorkspace="chat">
                 <MiniouLoading message="Loading chat..." />
-            </AppShell>
+            </WorkspaceShell>
         );
     }
 
     if (!sessionId) {
         return (
-            <AppShell background="gmail">
+            <WorkspaceShell activeWorkspace="chat">
                 <MiniouLoading message="Starting chat..." />
-            </AppShell>
+            </WorkspaceShell>
         );
     }
 
     return (
-        <AppShell
-            background="gmail"
-            contentClassName="mx-auto flex h-[calc(100dvh-0.5rem)] w-full max-w-6xl flex-col !pb-0 !pt-12 sm:!pt-14 md:!pt-[3.5rem]"
-        >
-            <div className="mb-1.5 flex shrink-0 items-center justify-end gap-2">
-                <Link href="/mail">
-                    <MiniouButton type="button" variant="secondary" size="sm">
-                        Back to mail
-                    </MiniouButton>
-                </Link>
+        <WorkspaceShell activeWorkspace="chat">
+            <div className="mb-3 flex shrink-0 items-center justify-between gap-4">
+                <div>
+                    <p className="text-sm font-medium text-muted">Assistant</p>
+                    <h1 className="mt-1 text-2xl font-bold tracking-tight">Chat</h1>
+                </div>
                 <MiniouButton type="button" size="sm" onClick={handleNewChat}>
                     New chat
                 </MiniouButton>
             </div>
 
-            <div className="grid min-h-0 flex-1 grid-cols-1 gap-3 lg:grid-cols-[260px_1fr]">
-                <MiniouPanel className="flex min-h-0 flex-col overflow-hidden">
-                    <div className="border-b border-white/10 px-4 py-3">
-                        <p className="text-xs font-semibold uppercase tracking-wider text-white/45">
+            <div className="grid min-h-0 flex-1 grid-cols-1 gap-3 lg:grid-cols-[240px_1fr]">
+                <MiniouPanel className="flex min-h-0 flex-col overflow-hidden max-lg:max-h-48">
+                    <div className="border-b border-border px-3 py-2.5">
+                        <p className="text-[11px] font-medium uppercase tracking-wider text-muted">
                             History
                         </p>
                     </div>
-                    <div className="min-h-0 flex-1 overflow-y-auto p-2">
+                    <div className="min-h-0 flex-1 overflow-y-auto p-1.5">
                         {(sessionsData?.sessions ?? []).map((session) => {
                             const active = session.id === sessionId;
                             return (
@@ -119,21 +115,21 @@ export function ChatView({ sessionId }: { sessionId?: string }) {
                                     key={session.id}
                                     href={`/chat/${session.id}`}
                                     className={cn(
-                                        "mb-1 block rounded-lg px-3 py-2.5 transition",
+                                        "mb-0.5 block rounded-md px-2.5 py-2 transition",
                                         active
                                             ? "miniou-nav-item-active"
-                                            : "text-white/60 hover:bg-white/5 hover:text-white",
+                                            : "text-muted hover:bg-surface-hover hover:text-foreground",
                                     )}
                                 >
-                                    <p className="truncate text-sm font-medium">{session.title}</p>
-                                    <p className="mt-0.5 text-[10px] text-white/35">
+                                    <p className="truncate text-[13px] font-medium">{session.title}</p>
+                                    <p className="mt-0.5 text-[11px] text-muted">
                                         {formatSessionDate(session.updatedAt)}
                                     </p>
                                 </Link>
                             );
                         })}
                         {(sessionsData?.sessions.length ?? 0) === 0 && (
-                            <p className="px-2 py-4 text-sm text-white/45">No chats yet</p>
+                            <p className="px-2 py-4 text-[13px] text-muted">No chats yet</p>
                         )}
                     </div>
                 </MiniouPanel>
@@ -145,40 +141,57 @@ export function ChatView({ sessionId }: { sessionId?: string }) {
                         </div>
                     ) : (
                         <>
-                            <div className="min-h-0 flex-1 space-y-3 overflow-y-auto p-4">
+                            <div className="min-h-0 flex-1 overflow-y-auto px-4 py-4">
                                 {history?.messages.length === 0 && (
-                                    <p className="text-sm text-white/50">
-                                        Try: &quot;Email John about the project update&quot; or
-                                        &quot;Schedule a meeting tomorrow at 2pm&quot;
-                                    </p>
-                                )}
-                                {history?.messages.map((msg) => (
-                                    <div
-                                        key={msg.id}
-                                        className={
-                                            msg.role === "user"
-                                                ? "miniou-chat-bubble-user"
-                                                : "miniou-chat-bubble-assistant"
-                                        }
-                                    >
-                                        {msg.content}
+                                    <div className="flex min-h-[12rem] flex-col items-center justify-center text-center">
+                                        <p className="text-sm text-muted">
+                                            Try: &quot;Email John about the project update&quot;
+                                        </p>
+                                        <p className="mt-1 text-[13px] text-muted">
+                                            or &quot;Schedule a meeting tomorrow at 2pm&quot;
+                                        </p>
                                     </div>
-                                ))}
-                                {sendMessage.isPending && (
-                                    <p className="text-sm text-white/50">Thinking...</p>
                                 )}
+                                <div className="flex flex-col gap-3">
+                                    {history?.messages.map((msg) => (
+                                        <div
+                                            key={msg.id}
+                                            className={cn(
+                                                "flex",
+                                                msg.role === "user" ? "justify-end" : "justify-start",
+                                            )}
+                                        >
+                                            <div
+                                                className={
+                                                    msg.role === "user"
+                                                        ? "miniou-chat-bubble-user"
+                                                        : "miniou-chat-bubble-assistant"
+                                                }
+                                            >
+                                                {msg.content}
+                                            </div>
+                                        </div>
+                                    ))}
+                                    {sendMessage.isPending && (
+                                        <div className="flex justify-start">
+                                            <p className="miniou-chat-bubble-assistant text-muted">
+                                                Thinking…
+                                            </p>
+                                        </div>
+                                    )}
+                                </div>
                             </div>
 
                             <form
                                 onSubmit={handleSubmit}
-                                className="flex shrink-0 gap-2 border-t border-white/10 px-4 pb-5 pt-4"
+                                className="flex shrink-0 gap-2 border-t border-border bg-surface/30 p-3"
                             >
                                 <MiniouInput
                                     type="text"
                                     value={message}
                                     onChange={(e) => setMessage(e.target.value)}
                                     placeholder="Send an email or schedule a meeting…"
-                                    className="flex-1 rounded-xl py-3"
+                                    className="flex-1"
                                     disabled={sendMessage.isPending}
                                 />
                                 <MiniouButton
@@ -190,7 +203,7 @@ export function ChatView({ sessionId }: { sessionId?: string }) {
                             </form>
 
                             {sendMessage.error && (
-                                <p className="px-4 pb-4 text-sm text-miniou-red">
+                                <p className="px-3 pb-3 text-[13px] text-destructive">
                                     {sendMessage.error.message}
                                 </p>
                             )}
@@ -198,6 +211,6 @@ export function ChatView({ sessionId }: { sessionId?: string }) {
                     )}
                 </MiniouPanel>
             </div>
-        </AppShell>
+        </WorkspaceShell>
     );
 }

@@ -22,6 +22,22 @@ export const gmailMessageSummaryModel = dynamicObject({
     snippet: () => z.string(),
     date: () => z.string(),
     isUnread: () => z.boolean(),
+    messageCount: () => z.number().int().min(1).optional(),
+});
+
+export const gmailMessageDetailModel = dynamicObject({
+    id: () => z.string(),
+    threadId: () => z.string(),
+    subject: () => z.string(),
+    from: () => z.string(),
+    to: () => z.string(),
+    snippet: () => z.string(),
+    date: () => z.string(),
+    isUnread: () => z.boolean(),
+    body: () => z.string(),
+    bodyText: () => z.string(),
+    bodyHtml: () => z.string().optional(),
+    internetMessageId: () => z.string().optional(),
 });
 
 export const listInboxInputModel = dynamicObject({
@@ -44,22 +60,27 @@ export const getMessageInputModel = dynamicObject({
 
 export type GetMessageInputModel = z.infer<typeof getMessageInputModel>;
 
-export const getMessageOutputModel = dynamicObject({
-    id: () => z.string(),
+export const getMessageOutputModel = gmailMessageDetailModel;
+
+export const getThreadInputModel = dynamicObject({
+    threadId: () => z.string().min(1),
+});
+
+export type GetThreadInputModel = z.infer<typeof getThreadInputModel>;
+
+export const getThreadOutputModel = dynamicObject({
     threadId: () => z.string(),
     subject: () => z.string(),
-    from: () => z.string(),
-    to: () => z.string(),
-    snippet: () => z.string(),
-    date: () => z.string(),
-    isUnread: () => z.boolean(),
-    body: () => z.string(),
+    messages: () => dynamicArray(gmailMessageDetailModel),
 });
 
 export const sendEmailInputModel = dynamicObject({
     to: () => z.string().min(1),
     subject: () => z.string(),
     body: () => z.string(),
+    threadId: () => z.string().optional(),
+    inReplyTo: () => z.string().optional(),
+    references: () => z.string().optional(),
 });
 
 export type SendEmailInputModel = z.infer<typeof sendEmailInputModel>;

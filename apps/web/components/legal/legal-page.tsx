@@ -8,15 +8,11 @@ type LegalPageProps = {
 
 export function LegalPage({ title, children }: LegalPageProps) {
     return (
-        <AppShell
-            variant="landing"
-            background="landing"
-            contentClassName="flex min-h-screen flex-col items-center px-6 py-24"
-        >
-            <MiniouPanel className="w-full max-w-2xl p-8 md:p-10">
+        <AppShell variant="landing" contentClassName="flex min-h-screen flex-col items-center py-16">
+            <MiniouPanel glow className="w-full max-w-2xl p-8 md:p-10">
                 <MiniouPageTitle title={title} subtitle="Last updated: June 13, 2026" />
-                <div className="mt-8 space-y-6 text-sm leading-relaxed text-white/70">{children}</div>
-                <div className="mt-10 flex flex-wrap gap-4 border-t border-white/10 pt-6">
+                <div className="mt-8 space-y-6 text-sm leading-relaxed text-muted">{children}</div>
+                <div className="mt-10 flex flex-wrap gap-4 border-t border-border pt-6">
                     <MiniouLink href="/" className="no-underline hover:underline">
                         Home
                     </MiniouLink>
@@ -35,7 +31,7 @@ export function LegalPage({ title, children }: LegalPageProps) {
 export function LegalSection({ title, children }: { title: string; children: React.ReactNode }) {
     return (
         <section>
-            <h2 className="mb-2 text-base font-semibold text-white">{title}</h2>
+            <h2 className="mb-2 text-base font-semibold text-foreground">{title}</h2>
             {children}
         </section>
     );

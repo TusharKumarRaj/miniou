@@ -34,22 +34,20 @@ export default function SignUpPage() {
     }
 
     return (
-        <AppShell variant="auth" background="signup">
-            <MiniouPanel glow className="w-full max-w-md">
-                <form onSubmit={handleSubmit} className="space-y-4 p-8">
+        <AppShell variant="auth">
+            <MiniouPanel glow className="w-full max-w-sm p-7">
+                <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
-                        <p className="text-[10px] font-semibold uppercase tracking-[0.35em] text-miniou-red">
-                            Get started
-                        </p>
-                        <h1 className="mt-1 text-2xl font-semibold">Create account</h1>
+                        <h1 className="text-2xl font-bold tracking-tight">Create account</h1>
+                        <p className="mt-1 text-[13px] text-muted">Access your workspace</p>
                     </div>
 
-                    <GoogleSignInButton label="Sign up with Google" />
+                    <GoogleSignInButton label="Continue with Google" />
 
-                    <div className="flex items-center gap-3 text-[10px] uppercase tracking-[0.25em] text-white/35">
-                        <span className="h-px flex-1 bg-white/10" />
-                        <span>or</span>
-                        <span className="h-px flex-1 bg-white/10" />
+                    <div className="flex items-center gap-3 text-[12px] font-medium text-muted">
+                        <span className="h-px flex-1 bg-border" />
+                        or
+                        <span className="h-px flex-1 bg-border" />
                     </div>
 
                     <MiniouInput
@@ -76,18 +74,16 @@ export default function SignUpPage() {
                     />
 
                     {signUp.error && (
-                        <p className="text-sm text-miniou-red">{signUp.error.message}</p>
+                        <p className="text-[13px] text-destructive">{signUp.error.message}</p>
                     )}
 
                     <MiniouButton type="submit" disabled={signUp.isPending} className="w-full">
-                        {signUp.isPending ? "Creating account..." : "Sign up with email"}
+                        {signUp.isPending ? "Creating…" : "Create account"}
                     </MiniouButton>
 
-                    <p className="text-center text-sm text-white/50">
-                        Already have an account?{" "}
-                        <MiniouLink href="/login" className="no-underline hover:underline">
-                            Sign in
-                        </MiniouLink>
+                    <p className="text-center text-[13px] text-muted">
+                        Have an account?{" "}
+                        <MiniouLink href="/login">Sign in</MiniouLink>
                     </p>
                 </form>
             </MiniouPanel>

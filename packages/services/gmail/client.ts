@@ -14,6 +14,9 @@ export type GmailSendInput = {
     to: string;
     subject: string;
     body: string;
+    threadId?: string;
+    inReplyTo?: string;
+    references?: string;
 };
 
 type MessagePartHeader = { name?: string; value?: string };
@@ -33,6 +36,12 @@ type GmailMessage = {
     payload?: MessagePart;
 };
 
+type GmailThread = {
+    id?: string;
+    snippet?: string;
+    messages?: GmailMessage[];
+};
+
 export type GmailCorsairClient = {
     gmail: {
         api: {
@@ -50,10 +59,25 @@ export type GmailCorsairClient = {
                     format?: "full" | "metadata" | "minimal" | "raw";
                     metadataHeaders?: string[];
                 }) => Promise<GmailMessage>;
-                send: (input: { raw: string; userId?: string }) => Promise<{
+                send: (input: { raw: string; userId?: string; threadId?: string }) => Promise<{
                     id?: string;
                     threadId?: string;
                 }>;
+            };
+            threads: {
+                list: (input: {
+                    maxResults?: number;
+                    pageToken?: string;
+                    labelIds?: string[];
+                }) => Promise<{
+                    threads?: Array<{ id?: string }>;
+                    nextPageToken?: string;
+                }>;
+                get: (input: {
+                    id: string;
+                    format?: "full" | "metadata" | "minimal";
+                    metadataHeaders?: string[];
+                }) => Promise<GmailThread>;
             };
         };
     };
@@ -73,21 +97,31 @@ function decodeBodyData(data: string): string {
     return Buffer.from(normalized, "base64").toString("utf-8");
 }
 
-function extractPlainBody(payload: MessagePart | undefined): string {
-    if (!payload) return "";
+type BodyContent = {
+    plain: string;
+    html: string;
+};
+
+function extractBodies(payload: MessagePart | undefined): BodyContent {
+    if (!payload) return { plain: "", html: "" };
+
+    const result = { plain: "", html: "" };
 
     if (payload.mimeType === "text/plain" && payload.body?.data) {
-        return decodeBodyData(payload.body.data);
+        result.plain = decodeBodyData(payload.body.data);
+    } else if (payload.mimeType === "text/html" && payload.body?.data) {
+        result.html = decodeBodyData(payload.body.data);
     }
 
     if (payload.parts) {
         for (const part of payload.parts) {
-            const text = extractPlainBody(part);
-            if (text) return text;
+            const nested = extractBodies(part);
+            if (!result.plain && nested.plain) result.plain = nested.plain;
+            if (!result.html && nested.html) result.html = nested.html;
         }
     }
 
-    return "";
+    return result;
 }
 
 function formatInternalDate(internalDate?: string | Date): string {
@@ -98,6 +132,18 @@ function formatInternalDate(internalDate?: string | Date): string {
     const ms = Number(internalDate);
     if (Number.isNaN(ms)) return internalDate;
     return new Date(ms).toISOString();
+}
+
+function messageTimestamp(message: GmailMessage): number {
+    const ms = Number(message.internalDate ?? 0);
+    return Number.isNaN(ms) ? 0 : ms;
+}
+
+function pickLatestMessage(messages: GmailMessage[]): GmailMessage | undefined {
+    if (!messages.length) return undefined;
+    return messages.reduce((latest, message) =>
+        messageTimestamp(message) > messageTimestamp(latest) ? message : latest,
+    );
 }
 
 export function mapMessageSummary(message: GmailMessage) {
@@ -116,23 +162,52 @@ export function mapMessageSummary(message: GmailMessage) {
 }
 
 export function mapMessageDetail(message: GmailMessage) {
+    const { plain, html } = extractBodies(message.payload);
+    const headers = message.payload?.headers;
+
     return {
         ...mapMessageSummary(message),
-        body: extractPlainBody(message.payload) || message.snippet || "",
+        body: plain || message.snippet || "",
+        bodyText: plain || message.snippet || "",
+        bodyHtml: html,
+        internetMessageId: getHeader(headers, "Message-ID"),
     };
 }
 
-export function buildGmailRawMessage({ to, subject, body }: GmailSendInput): string {
-    const rfc2822 = [
-        `To: ${to}`,
-        `Subject: ${subject}`,
+export function mapThreadSummary(thread: GmailThread) {
+    const messages = thread.messages ?? [];
+    const latest = pickLatestMessage(messages);
+    if (!latest) return null;
+
+    const summary = mapMessageSummary(latest);
+
+    return {
+        ...summary,
+        id: thread.id ?? summary.threadId,
+        threadId: thread.id ?? summary.threadId,
+        messageCount: messages.length,
+        isUnread: messages.some((message) => message.labelIds?.includes("UNREAD")),
+    };
+}
+
+export function buildGmailRawMessage(input: GmailSendInput): string {
+    const lines = [`To: ${input.to}`, `Subject: ${input.subject}`];
+
+    if (input.inReplyTo) {
+        lines.push(`In-Reply-To: ${input.inReplyTo}`);
+    }
+    if (input.references) {
+        lines.push(`References: ${input.references}`);
+    }
+
+    lines.push(
         "MIME-Version: 1.0",
         "Content-Type: text/plain; charset=UTF-8",
         "",
-        body,
-    ].join("\r\n");
+        input.body,
+    );
 
-    return Buffer.from(rfc2822, "utf-8")
+    return Buffer.from(lines.join("\r\n"), "utf-8")
         .toString("base64")
         .replace(/\+/g, "-")
         .replace(/\//g, "_")
@@ -142,7 +217,10 @@ export function buildGmailRawMessage({ to, subject, body }: GmailSendInput): str
 export async function sendGmailEmail(tenant: TenantCorsair, input: GmailSendInput) {
     const raw = buildGmailRawMessage(input);
     const corsair = asGmailClient(tenant);
-    const result = await corsair.gmail.api.messages.send({ raw });
+    const result = await corsair.gmail.api.messages.send({
+        raw,
+        threadId: input.threadId,
+    });
 
     return {
         messageId: result.id,
@@ -161,27 +239,26 @@ export async function fetchLabelMessages(
     },
 ) {
     const corsair = asGmailClient(tenant);
-    const list = await corsair.gmail.api.messages.list({
+    const list = await corsair.gmail.api.threads.list({
         maxResults: options.maxResults ?? 25,
         pageToken: options.pageToken,
         labelIds: options.labelIds ?? ["INBOX"],
     });
 
-    const ids = (list.messages ?? []).map((m) => m.id).filter((id): id is string => Boolean(id));
+    const ids = (list.threads ?? []).map((thread) => thread.id).filter((id): id is string => Boolean(id));
 
-    const messages = await Promise.all(
+    const threads = await Promise.all(
         ids.map(async (id) => {
-            // Omit metadataHeaders: Corsair joins them with commas, but Gmail expects repeated params.
-            const message = await corsair.gmail.api.messages.get({
+            const thread = await corsair.gmail.api.threads.get({
                 id,
                 format: "metadata",
             });
-            return mapMessageSummary(message);
+            return mapThreadSummary(thread);
         }),
     );
 
     return {
-        messages,
+        messages: threads.filter((thread): thread is NonNullable<typeof thread> => Boolean(thread)),
         nextPageToken: list.nextPageToken,
     };
 }
@@ -202,6 +279,27 @@ export async function fetchGmailMessage(tenant: TenantCorsair, messageId: string
     });
 
     return mapMessageDetail(message);
+}
+
+export async function fetchGmailThread(tenant: TenantCorsair, threadId: string) {
+    const corsair = asGmailClient(tenant);
+    const thread = await corsair.gmail.api.threads.get({
+        id: threadId,
+        format: "full",
+    });
+
+    const messages = (thread.messages ?? [])
+        .slice()
+        .sort((a, b) => messageTimestamp(a) - messageTimestamp(b))
+        .map(mapMessageDetail);
+
+    const latest = messages.at(-1);
+
+    return {
+        threadId: thread.id ?? threadId,
+        subject: latest?.subject ?? "(no subject)",
+        messages,
+    };
 }
 
 async function collectRecipientsFromLabels(

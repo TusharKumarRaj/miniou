@@ -15,7 +15,7 @@ export default function TermsPage() {
                     By accessing or using miniou at{" "}
                     <a
                         href="https://miniou.tusharcodes.tech"
-                        className="text-white underline decoration-white/30 underline-offset-2 hover:decoration-white"
+                        className="text-foreground underline decoration-border underline-offset-2 hover:decoration-foreground"
                     >
                         miniou.tusharcodes.tech
                     </a>
@@ -94,7 +94,7 @@ export default function TermsPage() {
                     Questions about these Terms:{" "}
                     <a
                         href="mailto:support@tusharcodes.tech"
-                        className="text-white underline decoration-white/30 underline-offset-2 hover:decoration-white"
+                        className="text-foreground underline decoration-border underline-offset-2 hover:decoration-foreground"
                     >
                         support@tusharcodes.tech
                     </a>

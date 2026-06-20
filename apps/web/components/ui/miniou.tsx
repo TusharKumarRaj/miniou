@@ -12,24 +12,16 @@ export function MiniouPanel({
     children: React.ReactNode;
     glow?: boolean;
 }) {
-    if (glow) {
-        return (
-            <div className="miniou-panel-glow rounded-xl">
-                <div className={cn("miniou-panel-inner h-full rounded-[11px]", className)}>
-                    {children}
-                </div>
-            </div>
-        );
-    }
-
-    return <div className={cn("miniou-panel", className)}>{children}</div>;
+    return (
+        <div className={cn(glow ? "miniou-panel-glow" : "miniou-panel", className)}>{children}</div>
+    );
 }
 
 type ButtonVariant = "primary" | "secondary" | "ghost" | "danger";
 
 const buttonSizes = {
-    sm: "px-4 py-2 text-[10px] sm:text-[11px]",
-    md: "px-5 py-2.5 text-[11px] sm:text-xs",
+    sm: "px-3 py-1.5 text-[13px]",
+    md: "px-4 py-2 text-[13px]",
 };
 
 export function MiniouButton({
@@ -41,18 +33,8 @@ export function MiniouButton({
 }: ComponentPropsWithoutRef<"button"> & { variant?: ButtonVariant; size?: "sm" | "md" }) {
     if (variant === "primary") {
         return (
-            <button
-                className={cn("miniou-cta-border block rounded-md disabled:opacity-50", className)}
-                {...props}
-            >
-                <span
-                    className={cn(
-                        "block w-full rounded-[5px] bg-black/80 text-center font-semibold uppercase tracking-[0.18em] text-white backdrop-blur-sm transition hover:bg-white/5",
-                        buttonSizes[size],
-                    )}
-                >
-                    {children}
-                </span>
+            <button className={cn("miniou-btn-primary", buttonSizes[size], className)} {...props}>
+                {children}
             </button>
         );
     }
@@ -61,7 +43,7 @@ export function MiniouButton({
         return (
             <button
                 className={cn(
-                    "rounded-lg border border-miniou-red/40 bg-miniou-red/10 px-5 py-2 text-sm text-miniou-red transition hover:bg-miniou-red/20 disabled:opacity-50",
+                    "rounded-lg border border-red-500/25 bg-red-500/10 px-4 py-2 text-[13px] font-medium text-destructive transition hover:bg-red-500/15 disabled:opacity-50",
                     className,
                 )}
                 {...props}
@@ -75,7 +57,7 @@ export function MiniouButton({
         return (
             <button
                 className={cn(
-                    "text-sm text-white/55 transition hover:text-white disabled:opacity-50",
+                    "rounded-lg px-3 py-1.5 text-[13px] font-medium text-muted transition hover:bg-surface-hover hover:text-foreground disabled:opacity-50",
                     className,
                 )}
                 {...props}
@@ -86,10 +68,7 @@ export function MiniouButton({
     }
 
     return (
-        <button
-            className={cn("miniou-btn-secondary disabled:opacity-50", className)}
-            {...props}
-        >
+        <button className={cn("miniou-btn-secondary", buttonSizes[size], className)} {...props}>
             {children}
         </button>
     );
@@ -108,64 +87,43 @@ export function MiniouButtonLink({
     className?: string;
     children: React.ReactNode;
 }) {
-    if (variant === "primary") {
-        return (
-            <Link href={href} className={cn("miniou-cta-border inline-block rounded-md", className)}>
-                <span
-                    className={cn(
-                        "block rounded-[5px] bg-black/80 font-semibold uppercase tracking-[0.18em] text-white backdrop-blur-sm transition hover:bg-white/5",
-                        buttonSizes[size],
-                    )}
-                >
-                    {children}
-                </span>
-            </Link>
-        );
-    }
+    const classes =
+        variant === "primary"
+            ? cn("miniou-btn-primary", buttonSizes[size], className)
+            : cn("miniou-btn-secondary", buttonSizes[size], className);
 
     return (
-        <Link href={href} className={cn("miniou-btn-secondary inline-block text-center", className)}>
+        <Link href={href} className={classes}>
             {children}
         </Link>
     );
 }
 
-export function MiniouInput({
-    className,
-    ...props
-}: ComponentPropsWithoutRef<"input">) {
+export function MiniouInput({ className, ...props }: ComponentPropsWithoutRef<"input">) {
     return <input className={cn("miniou-input", className)} {...props} />;
 }
 
-export function MiniouTextarea({
-    className,
-    ...props
-}: ComponentPropsWithoutRef<"textarea">) {
+export function MiniouTextarea({ className, ...props }: ComponentPropsWithoutRef<"textarea">) {
     return <textarea className={cn("miniou-input resize-y", className)} {...props} />;
 }
 
 export function MiniouLabel({ className, children }: { className?: string; children: React.ReactNode }) {
-    return <span className={cn("mb-1 block text-xs font-medium uppercase tracking-wider text-white/45", className)}>{children}</span>;
+    return (
+        <span className={cn("mb-1.5 block text-[12px] font-medium text-muted", className)}>
+            {children}
+        </span>
+    );
 }
 
 export function MiniouLink({ className, ...props }: ComponentPropsWithoutRef<typeof Link>) {
-    return <Link className={cn("miniou-link text-sm", className)} {...props} />;
+    return <Link className={cn("miniou-link text-[13px]", className)} {...props} />;
 }
 
-export function MiniouPageTitle({
-    title,
-    subtitle,
-}: {
-    title: string;
-    subtitle?: string;
-}) {
+export function MiniouPageTitle({ title, subtitle }: { title: string; subtitle?: string }) {
     return (
         <div>
-            <p className="text-[10px] font-semibold uppercase tracking-[0.35em] text-miniou-red">
-                miniou
-            </p>
-            <h1 className="mt-1 text-2xl font-semibold text-white">{title}</h1>
-            {subtitle && <p className="mt-1 text-sm text-white/50">{subtitle}</p>}
+            <h1 className="text-xl font-semibold tracking-tight text-foreground">{title}</h1>
+            {subtitle && <p className="mt-1 text-[13px] text-muted">{subtitle}</p>}
         </div>
     );
 }
@@ -173,8 +131,8 @@ export function MiniouPageTitle({
 export function MiniouLoading({ message = "Loading..." }: { message?: string }) {
     return (
         <div className="flex min-h-[40vh] flex-col items-center justify-center gap-3">
-            <div className="h-8 w-8 animate-spin rounded-full border-2 border-white/10 border-t-miniou-red" />
-            <p className="text-sm text-white/50">{message}</p>
+            <div className="h-6 w-6 animate-spin rounded-full border-2 border-white/10 border-t-white/70" />
+            <p className="text-[12px] font-medium text-muted">{message}</p>
         </div>
     );
 }

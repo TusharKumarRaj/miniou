@@ -19,7 +19,7 @@ export function MiniouModal({ open, onClose, title, children, className }: Modal
             <button
                 type="button"
                 aria-label="Close dialog"
-                className="absolute inset-0 bg-black/65 backdrop-blur-sm"
+                className="absolute inset-0 bg-black/40 backdrop-blur-[2px]"
                 onClick={onClose}
             />
             <MiniouPanel
@@ -29,12 +29,12 @@ export function MiniouModal({ open, onClose, title, children, className }: Modal
                     className,
                 )}
             >
-                <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
+                <div className="flex items-center justify-between border-b border-border px-5 py-4">
                     <h2 className="text-lg font-semibold">{title}</h2>
                     <button
                         type="button"
                         onClick={onClose}
-                        className="rounded-lg px-2 py-1 text-white/50 transition hover:bg-white/5 hover:text-white"
+                        className="rounded-lg px-2 py-1 text-muted transition hover:bg-muted-surface hover:text-foreground"
                         aria-label="Close"
                     >
                         ✕

@@ -65,7 +65,7 @@ export function CompactMonthCalendar({
                 </div>
             </div>
 
-            <div className="grid grid-cols-7 pb-1.5 text-center text-[10px] font-medium uppercase tracking-wide text-white/45">
+            <div className="grid grid-cols-7 pb-1.5 text-center text-[10px] font-medium uppercase tracking-wide text-muted">
                 {WEEKDAYS.map((day) => (
                     <div key={day}>{day}</div>
                 ))}
@@ -85,8 +85,8 @@ export function CompactMonthCalendar({
                             type="button"
                             onClick={() => onSelectDay(date)}
                             className={`flex aspect-square flex-col items-center justify-center rounded-lg text-sm transition ${
-                                !inMonth ? "text-white/25" : "text-white/80 hover:bg-white/5"
-                            } ${isSelected ? "bg-miniou-red/20 ring-1 ring-miniou-red/40" : ""}`}
+                                !inMonth ? "text-muted/50" : "text-foreground hover:bg-muted-surface"
+                            } ${isSelected ? "bg-accent-soft ring-1 ring-accent/30" : ""}`}
                         >
                             <span
                                 className={`flex h-7 w-7 items-center justify-center rounded-full ${
@@ -100,7 +100,7 @@ export function CompactMonthCalendar({
                                     {dayEvents.slice(0, 3).map((event) => (
                                         <span
                                             key={event.id}
-                                            className="h-1 w-1 rounded-full bg-miniou-red"
+                                            className="h-1 w-1 rounded-full bg-accent"
                                         />
                                     ))}
                                 </span>

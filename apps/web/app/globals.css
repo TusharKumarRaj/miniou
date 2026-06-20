@@ -1,214 +1,337 @@
 @import "tailwindcss";
 
 @theme {
-    --color-miniou-red: #ff1f1f;
-    --color-miniou-red-bright: #ff0033;
-    --color-miniou-red-dim: #cc1212;
-    --color-miniou-bg: #0a0b14;
-    --color-miniou-panel: #0d0f1a;
-    --font-display: var(--font-bebas), ui-sans-serif, system-ui, sans-serif;
+    --color-background: #030505;
+    --color-foreground: #ffffff;
+    --color-muted: #d7d7d7;
+    --color-muted-dim: #909090;
+    --color-border: rgba(255, 255, 255, 0.12);
+    --color-card: #ffffff;
+    --color-surface: rgba(255, 255, 255, 0.04);
+    --color-surface-hover: rgba(255, 255, 255, 0.08);
+    --color-primary: #ffffff;
+    --color-primary-foreground: #030505;
+    --color-accent: #ffffff;
+    --color-accent-soft: rgba(255, 255, 255, 0.06);
+    --color-sage: #d7d7d7;
+    --color-sage-soft: rgba(215, 215, 215, 0.08);
+    --color-muted-surface: #1a1a1a;
+    --color-ink: #ffffff;
+    --color-destructive: #f87171;
+    --color-voyance-gray: #d7d7d7;
+    --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+    --font-serif: var(--font-instrument-serif), "Georgia", serif;
+    --font-mono: var(--font-ibm-plex-mono), ui-monospace, monospace;
+    --font-display: var(--font-syne), ui-sans-serif, system-ui, sans-serif;
 }
 
 body {
     margin: 0;
-    background: var(--color-miniou-bg);
-    color: #fafafa;
-    font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+    background: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
 }
 
 ::selection {
-    background: color-mix(in oklab, var(--color-miniou-red) 35%, transparent);
+    background: rgba(255, 255, 255, 0.18);
 }
 
-.miniou-screen-bg,
-.miniou-mascot-bg {
-    background-size: cover;
-    background-position: center top;
-    background-repeat: no-repeat;
+* {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
 }
 
-.miniou-mascot-bg {
-    background-image: url("/miniou_mascot.svg");
+.font-serif {
+    font-family: var(--font-serif);
 }
 
-.miniou-cta-border {
-    background: linear-gradient(135deg, #ff2a2a 0%, #9333ea 55%, #ff2a2a 100%);
-    padding: 1px;
+.font-mono {
+    font-family: var(--font-mono);
+}
+
+.font-display {
+    font-family: var(--font-display);
+}
+
+.paper-bg {
+    background-color: var(--color-background);
+}
+
+.paper-bg::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.04;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.paper-lines {
+    background-image: none;
+}
+
+/* Scroll-stagger reveal */
+.voyance-reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition:
+        opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+        transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.voyance-reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.voyance-reveal-scale {
+    opacity: 0;
+    transform: scale(0.94);
+    transition:
+        opacity 1s cubic-bezier(0.22, 1, 0.36, 1),
+        transform 1.1s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.voyance-reveal-scale.is-visible {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.voyance-watermark {
+    font-family: var(--font-display);
+    font-size: clamp(5rem, 18vw, 14rem);
+    line-height: 0.85;
+    letter-spacing: -0.02em;
+    color: rgba(255, 255, 255, 0.07);
+    user-select: none;
+}
+
+.voyance-headline-lowercase {
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 7vw, 5.5rem);
+    font-weight: 800;
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    text-transform: lowercase;
+    color: #ffffff;
+}
+
+.voyance-manifesto {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5.5vw, 4.25rem);
+    font-weight: 700;
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+}
+
+/* Bright white emphasis — no glow */
+.voyance-glow-word {
+    color: #ffffff;
+}
+
+.voyance-title-glow {
+    font-family: var(--font-display);
+    color: #ffffff;
+}
+
+.voyance-body-glow {
+    color: #ffffff;
+}
+
+.voyance-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9999px;
+    border: 1px solid rgba(255, 255, 255, 0.9);
+    background: #ffffff;
+    color: #030505;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    padding: 0.65rem 1.35rem;
+    transition: opacity 0.15s;
+}
+
+.voyance-pill:hover {
+    opacity: 0.88;
+}
+
+.voyance-pill-outline {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9999px;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    background: transparent;
+    color: #ffffff;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    padding: 0.65rem 1.35rem;
+    transition: background-color 0.15s, border-color 0.15s;
+}
+
+.voyance-pill-outline:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+.miniou-panel {
+    border-radius: 10px;
+    border: 1px solid var(--color-border);
+    background: rgba(255, 255, 255, 0.03);
 }
 
 .miniou-panel-glow {
-    background: linear-gradient(
-        135deg,
-        rgba(255, 42, 42, 0.55) 0%,
-        rgba(147, 51, 234, 0.4) 55%,
-        rgba(255, 42, 42, 0.55) 100%
-    );
-    padding: 1px;
-    box-shadow: 0 0 32px rgba(255, 31, 31, 0.12);
-}
-
-.miniou-panel-inner,
-.miniou-panel {
-    position: relative;
-    isolation: isolate;
-    overflow: hidden;
-    border-radius: 0.75rem;
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    background: rgba(8, 8, 14, 0.18);
-    backdrop-filter: blur(28px) saturate(1.2);
-    -webkit-backdrop-filter: blur(28px) saturate(1.2);
-    box-shadow:
-        0 8px 32px rgba(0, 0, 0, 0.22),
-        inset 0 1px 0 rgba(255, 255, 255, 0.1),
-        0 0 0 1px rgba(255, 31, 31, 0.06);
-}
-
-.miniou-panel::before,
-.miniou-panel-inner::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    background: linear-gradient(
-        165deg,
-        rgba(4, 4, 10, 0.62) 0%,
-        rgba(8, 6, 12, 0.48) 45%,
-        rgba(4, 4, 10, 0.55) 100%
-    );
-    pointer-events: none;
-    z-index: 0;
-}
-
-.miniou-panel > *,
-.miniou-panel-inner > * {
-    position: relative;
-    z-index: 1;
-}
-
-.miniou-panel-inner {
-    background: rgba(8, 8, 14, 0.22);
-    backdrop-filter: blur(28px) saturate(1.2);
-    -webkit-backdrop-filter: blur(28px) saturate(1.2);
+    border-radius: 10px;
+    border: 1px solid var(--color-border);
+    background: rgba(255, 255, 255, 0.04);
+    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.5);
 }
 
 .miniou-input {
     width: 100%;
-    border-radius: 0.5rem;
-    border: 1px solid rgba(255, 255, 255, 0.14);
-    background: rgba(0, 0, 0, 0.35);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    padding: 0.625rem 1rem;
+    border-radius: 8px;
+    border: 1px solid var(--color-border);
+    background: rgba(255, 255, 255, 0.04);
+    padding: 0.625rem 0.875rem;
     font-size: 0.875rem;
-    line-height: 1.25rem;
-    color: #fafafa;
+    color: var(--color-foreground);
     outline: none;
-    transition:
-        border-color 0.15s,
-        box-shadow 0.15s;
+    transition: border-color 0.15s, box-shadow 0.15s;
 }
 
 .miniou-input::placeholder {
-    color: color-mix(in oklab, white 35%, transparent);
+    color: var(--color-muted-dim);
 }
 
 .miniou-input:focus {
-    border-color: color-mix(in oklab, var(--color-miniou-red) 50%, transparent);
-    box-shadow: 0 0 0 1px color-mix(in oklab, var(--color-miniou-red) 25%, transparent);
+    border-color: rgba(255, 255, 255, 0.28);
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.06);
+}
+
+.miniou-btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.375rem;
+    border-radius: 9999px;
+    border: 1px solid #ffffff;
+    background: #ffffff;
+    color: #030505;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    transition: opacity 0.15s;
+}
+
+.miniou-btn-primary:hover:not(:disabled) {
+    opacity: 0.88;
+}
+
+.miniou-btn-primary:disabled {
+    opacity: 0.45;
 }
 
 .miniou-btn-secondary {
-    border-radius: 0.5rem;
-    border: 1px solid rgba(255, 255, 255, 0.16);
-    background: rgba(0, 0, 0, 0.3);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    padding: 0.5rem 1.25rem;
-    font-size: 0.875rem;
-    line-height: 1.25rem;
-    color: color-mix(in oklab, white 85%, transparent);
-    transition:
-        border-color 0.15s,
-        background-color 0.15s,
-        color 0.15s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.375rem;
+    border-radius: 9999px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: transparent;
+    color: var(--color-foreground);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    transition: border-color 0.15s, background-color 0.15s;
 }
 
-.miniou-btn-secondary:hover {
-    border-color: color-mix(in oklab, white 28%, transparent);
-    background: color-mix(in oklab, white 5%, transparent);
-    color: #fff;
+.miniou-btn-secondary:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.35);
+}
+
+.miniou-btn-secondary:disabled {
+    opacity: 0.45;
 }
 
 .miniou-link {
-    color: var(--color-miniou-red);
-    text-underline-offset: 4px;
+    color: var(--color-muted);
+    font-weight: 500;
+    text-decoration: none;
     transition: color 0.15s;
 }
 
 .miniou-link:hover {
-    color: #fff;
-}
-
-.miniou-stat-value {
-    font-family: var(--font-display);
-    letter-spacing: 0.02em;
-}
-
-.miniou-chat-bubble-user {
-    margin-left: auto;
-    max-width: 85%;
-    border-radius: 0.75rem;
-    background: linear-gradient(135deg, #ff2a2a 0%, #9333ea 100%);
-    padding: 0.625rem 1rem;
-    font-size: 0.875rem;
-    line-height: 1.25rem;
-    color: #fff;
-}
-
-.miniou-chat-bubble-assistant {
-    max-width: 85%;
-    border-radius: 0.75rem;
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    background: rgba(8, 8, 12, 0.4);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    padding: 0.625rem 1rem;
-    font-size: 0.875rem;
-    line-height: 1.25rem;
-    color: color-mix(in oklab, white 90%, transparent);
+    color: #ffffff;
+    text-decoration: underline;
+    text-underline-offset: 3px;
 }
 
 .miniou-nav-item-active {
-    background: rgba(255, 31, 31, 0.18);
-    color: #fff;
-    box-shadow: inset 0 0 0 1px rgba(255, 31, 31, 0.35);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    background: rgba(255, 255, 255, 0.08);
+    color: #ffffff;
+    font-weight: 600;
+    border-radius: 8px;
 }
 
-.miniou-event-pill {
-    background: color-mix(in oklab, var(--color-miniou-red) 22%, transparent);
-    color: #fff;
+.miniou-chat-bubble-user {
+    width: fit-content;
+    max-width: min(85%, 40rem);
+    border-radius: 14px 14px 4px 14px;
+    background: #ffffff;
+    color: #030505;
+    padding: 0.625rem 0.875rem;
+    font-size: 0.875rem;
+    line-height: 1.55;
+    white-space: pre-wrap;
+    word-break: break-word;
 }
 
-.miniou-event-pill:hover {
-    background: color-mix(in oklab, var(--color-miniou-red) 35%, transparent);
-}
-
-.miniou-event-pill-active {
-    background: linear-gradient(135deg, #ff2a2a 0%, #9333ea 100%);
-    color: #fff;
+.miniou-chat-bubble-assistant {
+    width: fit-content;
+    max-width: min(85%, 40rem);
+    border-radius: 14px 14px 14px 4px;
+    border: 1px solid var(--color-border);
+    background: rgba(255, 255, 255, 0.04);
+    padding: 0.625rem 0.875rem;
+    font-size: 0.875rem;
+    line-height: 1.55;
+    color: var(--color-foreground);
+    white-space: pre-wrap;
+    word-break: break-word;
 }
 
 .miniou-today-badge {
-    background: var(--color-miniou-red);
-    color: #fff;
+    background: #ffffff;
+    color: #030505;
     font-weight: 600;
 }
 
 .miniou-glass-subtle {
-    background: rgba(8, 8, 12, 0.35);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+}
+
+.miniou-stamp {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid var(--color-border);
+    border-radius: 9999px;
+    padding: 0.35rem 0.85rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--color-muted);
+}
+
+.envelope-card {
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.envelope-card::before {
+    display: none;
 }

@@ -197,21 +197,19 @@ export default function CalendarPage() {
 
     if (userLoading || statusLoading || eventsLoading) {
         return (
-            <WorkspaceShell background="calendar" activeWorkspace="calendar">
+            <WorkspaceShell activeWorkspace="calendar">
                 <MiniouLoading message="Loading calendar..." />
             </WorkspaceShell>
         );
     }
 
     return (
-        <WorkspaceShell background="calendar" activeWorkspace="calendar">
+        <WorkspaceShell activeWorkspace="calendar">
             <div className="mb-4 flex shrink-0 items-center justify-between gap-4">
                 <div>
-                    <p className="text-[10px] font-semibold uppercase tracking-[0.35em] text-miniou-red">
-                        Workspace
-                    </p>
-                    <h1 className="mt-1 text-2xl font-semibold text-white">Calendar</h1>
-                    <p className="mt-1 text-sm text-white/50">
+                    <p className="text-sm font-medium text-muted">Schedule</p>
+                    <h1 className="mt-1 text-2xl font-bold tracking-tight">Calendar</h1>
+                    <p className="mt-1 text-sm text-muted">
                         {dayEvents.length} event{dayEvents.length === 1 ? "" : "s"} on selected day
                     </p>
                 </div>
@@ -242,9 +240,9 @@ export default function CalendarPage() {
                 </MiniouPanel>
 
                 <MiniouPanel className="flex h-full min-h-0 flex-col overflow-hidden">
-                    <div className="border-b border-white/10 px-5 py-4">
+                    <div className="border-b border-border px-5 py-4">
                         <h2 className="text-lg font-semibold">{formatDayHeading(selectedDay)}</h2>
-                        <p className="mt-1 text-sm text-white/50">
+                        <p className="mt-1 text-sm text-foreground/50">
                             {dayEvents.length === 0
                                 ? "No events scheduled"
                                 : `${dayEvents.length} scheduled`}
@@ -253,10 +251,10 @@ export default function CalendarPage() {
 
                     <div className="min-h-0 flex-1 overflow-y-auto p-4">
                         {dayEvents.length === 0 ? (
-                            <div className="flex h-full min-h-[12rem] flex-col items-center justify-center text-center text-white/50">
+                            <div className="flex h-full min-h-[12rem] flex-col items-center justify-center text-center text-foreground/50">
                                 <svg
                                     viewBox="0 0 24 24"
-                                    className="mb-3 h-10 w-10 text-white/25"
+                                    className="mb-3 h-10 w-10 text-foreground/25"
                                     fill="none"
                                     stroke="currentColor"
                                     strokeWidth="1.5"
@@ -274,12 +272,12 @@ export default function CalendarPage() {
                                         key={event.id}
                                         type="button"
                                         onClick={() => openView(event.id)}
-                                        className="miniou-glass-subtle w-full rounded-lg px-4 py-3 text-left transition hover:bg-white/[0.06]"
+                                        className="miniou-glass-subtle w-full rounded-lg px-4 py-3 text-left transition hover:bg-muted-surface"
                                     >
-                                        <p className="text-sm font-medium text-white">
+                                        <p className="text-sm font-medium text-foreground">
                                             {event.title}
                                         </p>
-                                        <p className="mt-1 text-xs text-white/50">
+                                        <p className="mt-1 text-xs text-foreground/50">
                                             {formatEventTime(event.start)}
                                         </p>
                                     </button>
@@ -355,7 +353,7 @@ export default function CalendarPage() {
                         </MiniouButton>
                     </div>
                     {createEvent.error && (
-                        <p className="text-sm text-miniou-red">{createEvent.error.message}</p>
+                        <p className="text-sm text-destructive">{createEvent.error.message}</p>
                     )}
                 </form>
             </MiniouModal>
@@ -366,26 +364,26 @@ export default function CalendarPage() {
                 title={selectedEvent?.title ?? "Event"}
             >
                 {eventLoading ? (
-                    <p className="text-sm text-white/50">Loading event...</p>
+                    <p className="text-sm text-foreground/50">Loading event...</p>
                 ) : selectedEvent ? (
                     <div className="space-y-4">
-                        <p className="text-sm text-white/50">
+                        <p className="text-sm text-foreground/50">
                             {formatEventRange(selectedEvent.start, selectedEvent.end)}
                         </p>
                         {selectedEvent.location && (
-                            <p className="text-sm text-white/70">{selectedEvent.location}</p>
+                            <p className="text-sm text-foreground/70">{selectedEvent.location}</p>
                         )}
                         {selectedEvent.description && (
-                            <p className="whitespace-pre-wrap text-sm leading-6 text-white/80">
+                            <p className="whitespace-pre-wrap text-sm leading-6 text-foreground/80">
                                 {selectedEvent.description}
                             </p>
                         )}
                         {selectedEvent.attendees.length > 0 && (
                             <div>
-                                <p className="text-xs font-semibold uppercase tracking-wider text-white/45">
+                                <p className="text-xs font-semibold uppercase tracking-wider text-foreground/45">
                                     Attendees
                                 </p>
-                                <ul className="mt-2 space-y-1 text-sm text-white/70">
+                                <ul className="mt-2 space-y-1 text-sm text-foreground/70">
                                     {selectedEvent.attendees.map((attendee) => (
                                         <li key={attendee.email}>
                                             {attendee.displayName || attendee.email}
@@ -414,7 +412,7 @@ export default function CalendarPage() {
                                 </MiniouLink>
                             )}
                         </div>
-                        <div className="flex gap-2 border-t border-white/10 pt-4">
+                        <div className="flex gap-2 border-t border-border pt-4">
                             <MiniouButton
                                 type="button"
                                 variant="danger"
@@ -435,7 +433,7 @@ export default function CalendarPage() {
                         </div>
                     </div>
                 ) : (
-                    <p className="text-sm text-white/50">Event not found.</p>
+                    <p className="text-sm text-foreground/50">Event not found.</p>
                 )}
             </MiniouModal>
         </WorkspaceShell>

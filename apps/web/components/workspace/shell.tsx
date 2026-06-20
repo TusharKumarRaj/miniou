@@ -4,12 +4,11 @@ import {
     type GmailMailboxLabel,
     type WorkspaceSection,
 } from "~/components/workspace/sidebar";
-import type { ScreenBackground } from "~/lib/screen-backgrounds";
 import { cn } from "~/lib/cn";
 
 type WorkspaceShellProps = {
     children: React.ReactNode;
-    background: ScreenBackground;
+    background?: string;
     activeWorkspace: WorkspaceSection;
     activeMailboxLabel?: GmailMailboxLabel;
     onSelectMailbox?: (label: GmailMailboxLabel) => void;
@@ -19,7 +18,6 @@ type WorkspaceShellProps = {
 
 export function WorkspaceShell({
     children,
-    background,
     activeWorkspace,
     activeMailboxLabel,
     onSelectMailbox,
@@ -28,19 +26,20 @@ export function WorkspaceShell({
 }: WorkspaceShellProps) {
     return (
         <AppShell
-            background={background}
             contentClassName={cn(
-                "mx-auto flex h-[calc(100dvh-0.75rem)] w-full max-w-7xl flex-col !pb-2 !pt-12 sm:!pt-14 md:!pt-[3.5rem]",
+                "flex h-[calc(100dvh-3rem)] flex-col !pb-3 !pt-3",
                 contentClassName,
             )}
         >
-            <div className="grid min-h-0 flex-1 grid-cols-1 grid-rows-1 gap-4 lg:grid-cols-[200px_1fr]">
+            <div className="flex min-h-0 flex-1 gap-4">
                 <WorkspaceSidebar
                     activeWorkspace={activeWorkspace}
                     activeMailboxLabel={activeMailboxLabel}
                     onSelectMailbox={onSelectMailbox}
                 />
-                <div className={cn("flex h-full min-h-0 flex-col", mainClassName)}>{children}</div>
+                <div className={cn("flex min-h-0 min-w-0 flex-1 flex-col", mainClassName)}>
+                    {children}
+                </div>
             </div>
         </AppShell>
     );

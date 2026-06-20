@@ -26,12 +26,20 @@ export function useGmailMessage(messageId: string | null) {
     );
 }
 
+export function useGmailThread(threadId: string | null) {
+    return trpc.gmail.getThread.useQuery(
+        { threadId: threadId ?? "" },
+        { enabled: Boolean(threadId) },
+    );
+}
+
 export function useSendGmailEmail() {
     const utils = trpc.useUtils();
 
     return trpc.gmail.sendEmail.useMutation({
         onSuccess: () => {
             void utils.gmail.listInbox.invalidate();
+            void utils.gmail.getThread.invalidate();
         },
     });
 }
